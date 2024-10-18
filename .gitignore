@@ -12,3 +12,8 @@ requirements.txt
 src/**/.python-version
 src/rxext/rxext.egg-info/
 .mise.secret.toml
+
+# dont commit these by default if you update them
+rxinfo.py
+
+_NOTES.md

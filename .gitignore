@@ -1,0 +1,15 @@
+# for the following, waiting to commit this until can tell its necessary for deployment
+**/uv.lock
+*.db
+*.py[cod]
+.web
+__pycache__/
+assets/external/
+requirements.txt
+
+**/.DS_Store
+
+.vscode/
+**/__ignore.py
+src/rxext/rxext.egg-info/
+src/**/.python-version

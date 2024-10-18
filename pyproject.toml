@@ -1,0 +1,19 @@
+[project]
+    name = "saasrx"
+    version = "0.1.0"
+    description = "Add your description here"
+    readme = "README.md"
+    authors = [{ name = "graham", email = "graham.annett@gmail.com" }]
+    # cant use 3.13 if deploying on reflex
+    requires-python = ">=3.12"
+    dependencies = ["reflex>=0.6.2.post1"]
+
+    [project.scripts]
+        rx = "rxext.lib.cli:main"
+
+[build-system]
+    requires = ["hatchling"]
+    build-backend = "hatchling.build"
+
+[tool.uv.workspace]
+    members = ["src/rxext"]

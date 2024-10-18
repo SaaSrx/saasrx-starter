@@ -1,0 +1,9 @@
+
+[env]
+    _.file = [".mise.secret.toml"]
+
+[tasks.deploy]
+    run = "uv run reflex deploy --no-interactive --deployment-key saas --region sjc --env status_key=$status_key --env stripe_key=$stripe_key"
+
+[tasks.dev]
+    run = "uv run reflex run"

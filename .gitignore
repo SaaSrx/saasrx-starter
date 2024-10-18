@@ -1,15 +1,14 @@
 # for the following, waiting to commit this until can tell its necessary for deployment
+**/.DS_Store
+**/__ignore.py
 **/uv.lock
 *.db
 *.py[cod]
+.vscode/
 .web
 __pycache__/
 assets/external/
 requirements.txt
-
-**/.DS_Store
-
-.vscode/
-**/__ignore.py
-src/rxext/rxext.egg-info/
 src/**/.python-version
+src/rxext/rxext.egg-info/
+.mise.secret.toml

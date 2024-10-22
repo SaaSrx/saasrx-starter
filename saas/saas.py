@@ -1,17 +1,12 @@
 import reflex as rx
 
-from rxconfig import config
-from saasrx.pages import index
-
-
-class State(rx.State):
-    """The app state."""
-
-    _theme = config.theme
+from saas.pages import index
+from saas.state import State
 
 
 class App(rx.App):
-    theme = rx.theme(**config.theme.dict())
+    pass
+    # theme = rx.theme(**config.theme.dict())
 
 
 app = App()

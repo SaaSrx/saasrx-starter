@@ -1,4 +1,4 @@
-from rxext.lib.patched import patch_reflex
+from saas.rxext.patched import patch_reflex
 
 
 def main():

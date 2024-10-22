@@ -1,9 +1,20 @@
 
 [env]
-    _.file = [".mise.secret.toml"]
+    # MISE_ENV = "test"
+
+    db_host = "localhost"
+    db_name = "postgres"
+    db_user = "postgres"
+    db_port = "5432"
+    db_password = "password"
+
 
 [tasks.deploy]
-    run = "uv run reflex deploy --no-interactive --deployment-key saas --region sjc --env status_key=$status_key --env stripe_key=$stripe_key"
+    run = "uv run -- reflex deploy --no-interactive --deployment-key saas --region sjc --env status_key=$status_key --env stripe_key=$stripe_key"
 
 [tasks.dev]
     run = "uv run reflex run"
+
+[tasks."db:info"]
+    # use this to verify the db info
+    run = ["echo USING: $status_key", "echo [DB INFO] $db_host"]

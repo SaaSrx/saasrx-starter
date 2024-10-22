@@ -1,5 +1,7 @@
 import reflex as rx
 
+from saas.utils import secrets
+
 
 def create_icon(alt_text, icon_tag):
     """Create an icon with specified alt text and tag."""
@@ -109,6 +111,8 @@ def index() -> rx.Component:
         #     description_text="Easy setup for various payment gateways to monetize your app quickly.",
         # ),
         # create_hero_section(),
+        rx.heading("app name"),
+        rx.text(f"stats: {secrets['status_key']}"),
         rx.link(rx.button("docs"), href="/docs"),
         rx.theme_panel(default_open=False),
     )

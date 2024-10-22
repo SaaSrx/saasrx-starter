@@ -1,7 +1,7 @@
-from reflex.config import Config as _Config
+from reflex.config import Config
 
 
-class Config(_Config):
+class Config(Config):
     """
     Config class that extends rx.Config.
 
@@ -16,11 +16,13 @@ class Config(_Config):
     def module(self) -> str:
         if hasattr(self, "module_path"):
             return self.module_path.replace("/", ".")
-
         return super().module
 
     @property
     def reload_dirs(self) -> list[str]:
         if hasattr(self, "reload_paths"):
             return self.reload_paths
-        return [self.module.split(".")[0]]
+        elif hasattr(self, "module_path"):
+            return [self.module.split(".")[0]]
+        else:
+            return [self.app_name]

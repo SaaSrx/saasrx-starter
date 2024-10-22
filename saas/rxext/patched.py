@@ -3,7 +3,7 @@ from enum import Enum
 import reflex
 
 
-def run_uvicorn_backend(host: str, port: int, loglevel: str | Enum):
+def run_uvicorn_backend(host: str, port: int, loglevel: Enum):
     """Run the backend in development mode using Uvicorn.
 
     Args:

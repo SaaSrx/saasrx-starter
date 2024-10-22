@@ -15,5 +15,6 @@ src/rxext/rxext.egg-info/
 
 # dont commit these by default if you update them
 rxinfo.py
+.mise.*.toml
 
 _NOTES.md

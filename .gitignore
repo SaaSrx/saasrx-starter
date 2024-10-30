@@ -14,7 +14,10 @@ src/rxext/rxext.egg-info/
 .mise.secret.toml
 
 # dont commit these by default if you update them
-rxinfo.py
 .mise.*.toml
 
 _NOTES.md
+_ignore/
+
+# ignore docs until i know how i want to parse/present
+docs/

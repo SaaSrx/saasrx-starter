@@ -541,8 +541,14 @@ def create_page_layout():
     )
 
 
-def create_document():
+@rx.page(route="/docs")
+def docs():
     """Create the complete document structure with necessary scripts and styles."""
     return rx.fragment(
         create_page_layout(),
     )
+
+
+# @rx.page(route="/docs")
+# def docs():
+#     return rx.text("document page")

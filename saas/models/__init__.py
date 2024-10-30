@@ -39,3 +39,13 @@ class Payment(rx.Model, table=True):
         d["created"] = self.created.replace(microsecond=0).isoformat()
         d["updated"] = self.updated.replace(microsecond=0).isoformat()
         return d
+
+
+def setup_admin_dash(app: rx.App):
+    """
+    Setup the admin dashboard.
+
+    admin_dash=rx.AdminDash(models=[Customer]),
+    """
+    app.admin_dash = rx.AdminDash(models=[User, Payment])
+    return app

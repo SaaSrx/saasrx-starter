@@ -1,6 +1,8 @@
 
 [env]
-    # MISE_ENV = "test"
+    MISE_ENV = "test"
+    deployment_key = "saas"
+    deployment_region = "sjc"
 
     db_host = "localhost"
     db_name = "postgres"
@@ -8,13 +10,35 @@
     db_port = "5432"
     db_password = "password"
 
+    site_domain = "saasrx.dev"
+
+    email_domain = "updates.{{ env.site_domain }}"
+    email_from = "no-reply@{{ env.email_domain }}"
+    email_to = "dev@localhost"
+
+    resend_api_key = "re_"
+
 
 [tasks.deploy]
-    run = "uv run -- reflex deploy --no-interactive --deployment-key saas --region sjc --env status_key=$status_key --env stripe_key=$stripe_key"
+    run = '''uv run -- \
+    reflex deploy \
+    --no-interactive \
+    --deployment-key $deployment_key \
+    --region $deployment_region \
+    --with-tracing false \
+    --env status_mode=$status_mode --env stripe_key=$stripe_key --env db_host=$db_host --env db_name=$db_name --env db_user=$db_user --env db_port=$db_port --env db_password=$db_password --env site_domain=$site_domain --env email_domain=$email_domain --env email_from=$email_from --env email_to=$email_to --env resend_api_key=$resend_api_key
+    '''
 
 [tasks.dev]
     run = "uv run reflex run"
 
 [tasks."db:info"]
     # use this to verify the db info
-    run = ["echo USING: $status_key", "echo [DB INFO] $db_host"]
+    run = '''
+    echo USING: $status_mode \\n\
+    [DB INFO] $db_host $db_user $db_name \\n\
+    [STRIPE INFO] $stripe_pub_key
+    '''
+
+[tasks."test:email"]
+    run = "uv run python -m pytest tests/test_email.py"

@@ -1,9 +1,7 @@
-import json
-
 import requests
 import resend
 
-from rxconfig import secrets
+from saas.saas_config import secrets
 
 resend_api_key = secrets.resend_api_key
 resend.api_key = resend_api_key
@@ -18,7 +16,6 @@ class EmailSender:
 
 class ResendSDKEmailSender(EmailSender):
     resend.api_key = secrets.resend_api_key
-    
 
     def send_email(
         self, from_email: str, to_email: str, subject: str, html_content: str

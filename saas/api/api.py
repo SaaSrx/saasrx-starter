@@ -1,13 +1,8 @@
 from fastapi import Request
 
-from rxconfig import secrets
-from saas.rxext import console
-
 # import .webhooks as webhooks
-from . import webhooks
-
-# stripe_util.stripe.api_key = secrets.stripe_secret_key
-webhook_secret = secrets.stripe_webhook_secret
+# import saas.api.webhooks as webhooks
+from saas.rxext import console
 
 """
 This module defines API routes for a FastAPI application, including health checks and Stripe webhooks.
@@ -32,7 +27,7 @@ ROUTES (dict): A dictionary mapping route paths to their corresponding handler f
 # or just add to the API_ROUTES list
 async def api_health(req: Request):
     console.log(f"Got health check: {req=}")
-    return {"status": "ok"}
+    return {"status": "okay", "message": "retrieved health check"}
 
 
 # API_ROUTES = [

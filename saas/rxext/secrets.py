@@ -1,6 +1,8 @@
 import os
 from dataclasses import dataclass, field, fields, make_dataclass
 
+_OVERRIDE_ENV = True
+
 
 @dataclass
 class SecretConfig:
@@ -25,8 +27,8 @@ class SecretConfig:
         """
         for f in fields(cls):
             if f.name in os.environ:
-                if f.name not in kwargs:
-                    # only set if we dont pass in an override
+                # allow for only set if we dont pass in an override
+                if _OVERRIDE_ENV or (f.name not in kwargs):
                     kwargs[f.name] = os.environ[f.name]
 
         return cls(**kwargs)

@@ -1,2 +1,2 @@
-from .index import index
-from .docs import docs
+from saas.pages.docs import docs
+from saas.pages.index import index

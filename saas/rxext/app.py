@@ -6,8 +6,8 @@ from saas.rxext.endpoints import API_DECORATED_PAGES
 
 class App(app.App):
     def _apply_decorated_pages(self):
+        super()._apply_decorated_pages()
         self._apply_decorated_pages_api()
-        return super()._apply_decorated_pages()
 
     def _apply_decorated_pages_api(self):
         for route, route_handlers in API_DECORATED_PAGES.items():

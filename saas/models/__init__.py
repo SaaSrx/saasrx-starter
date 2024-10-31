@@ -44,8 +44,14 @@ class Payment(rx.Model, table=True):
 def setup_admin_dash(app: rx.App):
     """
     Setup the admin dashboard.
+    can pass as an arg to App instantiation like:
 
-    admin_dash=rx.AdminDash(models=[Customer]),
+    app = rx.App(
+        admin_dash=rx.AdminDash(models=[Customer]),
+    )
+
+    or use this function to set it up later.
+
     """
     app.admin_dash = rx.AdminDash(models=[User, Payment])
     return app

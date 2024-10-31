@@ -1,8 +1,8 @@
 import stripe
 from fastapi import HTTPException, Request
 
-from rxconfig import secrets
 from saas.rxext import console
+from saas.saas_config import secrets
 
 webhook_secret = secrets.stripe_webhook_secret
 

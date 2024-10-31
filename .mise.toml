@@ -20,12 +20,14 @@
 
 
 [tasks.deploy]
+    #  options removed for now:
+    # --with-tracing false \
     run = '''uv run -- \
     reflex deploy \
     --no-interactive \
     --deployment-key $deployment_key \
     --region $deployment_region \
-    --with-tracing false \
+
     --env status_mode=$status_mode --env stripe_key=$stripe_key --env db_host=$db_host --env db_name=$db_name --env db_user=$db_user --env db_port=$db_port --env db_password=$db_password --env site_domain=$site_domain --env email_domain=$email_domain --env email_from=$email_from --env email_to=$email_to --env resend_api_key=$resend_api_key
     '''
 

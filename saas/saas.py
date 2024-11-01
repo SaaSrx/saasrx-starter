@@ -2,9 +2,9 @@ import reflex as rx
 
 import saas.api as api
 from rxconfig import config
-from saas.pages import index
+from saas.pages import index, signin_page
 from saas.rxext.app import App
-from saas.state.state import CheckoutState, IndexState, MenuState, State
+from saas.state.state import CheckoutState, MenuState, State
 
 # webhooks = api.webhooks
 
@@ -19,6 +19,7 @@ app = App(
 # add web pages here:
 # app.add_page(component=index_, route="/")
 app.add_page(component=index, route="/")
+app.add_page(component=signin_page, route="/signin")
 # app.add_page(create_document, route="/docs")
 
 app.api.add_api_route("/health", api.api_health, methods=["GET"])

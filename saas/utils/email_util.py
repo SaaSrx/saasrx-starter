@@ -1,3 +1,5 @@
+import re
+
 import requests
 import resend
 
@@ -6,7 +8,23 @@ from saas.saas_config import secrets
 resend_api_key = secrets.resend_api_key
 resend.api_key = resend_api_key
 
+# ---- Generic Utils
 
+
+def invalid_email(email_str: str) -> bool:
+    """
+    Checks if the provided email string is invalid.
+
+    Args:
+        email_str (str): The email address to validate.
+
+    Returns:
+        bool: True if the email address is invalid, False otherwise.
+    """
+    return not re.match(r"[^@]+@[^@]+\.[^@]+", email_str)
+
+
+# ---- Sending Email Related
 class EmailSender:
     def send_email(
         self, from_email: str, to_email: str, subject: str, html_content: str

@@ -18,6 +18,8 @@
 
     resend_api_key = "re_"
 
+[tasks.wdev]
+    run = "trash .web/ && uv run reflex run"
 
 [tasks.deploy]
     #  options removed for now:

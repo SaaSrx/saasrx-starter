@@ -33,7 +33,7 @@ def navbar_desktop() -> rx.Component:
         rx.link("Features", href="#features", class_name=link_style),
         rx.link("Pricing", href="#pricing", class_name=link_style),
         rx.link("Testimonials", href="#testimonials", class_name=link_style),
-        rx.link(rx.button("Get Started", class_name=btn_style), href="#get-started"),
+        rx.link(rx.button("Get Started", class_name=btn_style), href="/signin"),
         class_name="hidden md:flex items-center space-x-8",
     )
 

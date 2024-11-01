@@ -1,19 +1,11 @@
 from saas.rxext import SecretConfig
 
+# ---- Fill in the following:
+APP_NAME = "saas"  # this will be the folder containing the app
+FORMATTED_APP_NAME = "SaaSrx"  # this will be the name displayed in the app
+# ----
 # demarcate keys that are empty and will cause silent issues with reflex deploy
 _EMPTY = ""
-
-tailwind_config = {
-    "theme": {
-        "extend": {},
-    },
-    "plugins": [
-        "@tailwindcss/typography",
-        "@tailwindcss/components",
-        "@tailwindcss/base",
-        "@tailwindcss/utilities",
-    ],
-}
 
 
 class Secrets(SecretConfig):
@@ -23,6 +15,7 @@ class Secrets(SecretConfig):
 
     # stripe webhook secret for verifying events
     stripe_webhook_secret: str = _EMPTY
+    stripe_web_url: str = _EMPTY
 
     # for email sending
     resend_api_key: str = _EMPTY
@@ -41,3 +34,20 @@ class Secrets(SecretConfig):
 
 # # get from env or pass in with kwargs, returns dataclass instance
 secrets = Secrets.setup()
+
+
+TAILWIND_CONFIG = {
+    "theme": {
+        "extend": {},
+    },
+    "plugins": [
+        "@tailwindcss/typography",
+    ],
+}
+
+config_kwargs = {
+    "app_name": APP_NAME,
+    "formated_app_name": FORMATTED_APP_NAME,
+    # "tailwind": TAILWIND_CONFIG,
+    "loglevel": secrets.loglevel,
+}

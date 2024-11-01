@@ -1,9 +1,9 @@
-from datetime import datetime
-
 import reflex as rx
 
 from rxconfig import config
+from saas.rxext import console
 from saas.saas_config import secrets
+from saas.utils.email_util import invalid_email
 
 
 def _complete_purchase(email: str):
@@ -29,9 +29,7 @@ class MenuState(State):
 
 
 class CheckoutState(rx.State):
-    user_email: str = ""
-
-    def handle_submit(self, data: dict):
+    async def handle_submit(self, data: dict):
         print("handle submit", data)
 
         _complete_purchase(data)
@@ -44,3 +42,38 @@ class CheckoutState(rx.State):
 
     def complete_purchase(self):
         pass
+
+
+def _check_email(email: str):
+    yield rx.toast.info(f"Checking email: {email}")
+    # yield asyncio.sleep(2)
+    yield rx.toast.success(f"Success: {email}")
+
+
+class AuthState(State):
+    entered_user_email: str
+    user_email: str
+
+    show_redirect_alert: bool = False
+
+    @rx.var
+    def invalid_email(self) -> bool:
+        return invalid_email(self.entered_user_email)
+
+    @rx.var
+    def input_invalid(self) -> bool:
+        return self.invalid_email
+
+    def redirect_to_external_purchase(self):
+        return rx.redirect(secrets.stripe_web_url)
+
+    def redirect_alert(self):
+        self.show_redirect_alert = not self.show_redirect_alert
+        console.log("show redirect alsert")
+
+    def handle_login(self, data: dict = None):
+        console.log(f"User login: {data=}")
+        user_found = False
+        yield rx.toast.error(f"Email not found: {data['email']}")
+        if not user_found:
+            return self.redirect_alert()

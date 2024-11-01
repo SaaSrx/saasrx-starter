@@ -1,7 +1,5 @@
 from saas.rxext import Config
+from saas.saas_config import config_kwargs
 
-config = Config(
-    app_name="saas",
-    formated_app_name="SaaSrx",
-    # loglevel=secrets.loglevel,
-)
+# get config from config_kwargs to allow hot reloading
+config = Config(**config_kwargs)

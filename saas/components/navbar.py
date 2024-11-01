@@ -15,7 +15,9 @@ def navbar_icon() -> rx.Component:
     return rx.box(
         rx.box(rx.icon("rocket", class_name="h-8 w-8"), class_name="text-indigo-600"),
         rx.text(
-            MenuState.menu_title, class_name="ml-2 text-xl font-bold text-gray-900"
+            MenuState.menu_title,
+            class_name="ml-2 text-xl font-bold text-gray-900",
+            on_click=MenuState.toggle_menu_title,
         ),
         class_name="flex items-center",
     )

@@ -1,35 +1,12 @@
 import reflex as rx
 
-from saas.api import api
+import saas.api as api
+from rxconfig import config
 from saas.pages import index
 from saas.rxext.app import App
+from saas.state.state import CheckoutState, IndexState, MenuState, State
 
-webhooks = api.webhooks
-
-
-class Customer(rx.Model, table=True):  # type: ignore
-    """The customer model."""
-
-    customer_name: str
-    email: str
-    age: int
-    gender: str
-    location: str
-    job: str
-    salary: int
-
-
-tailwind_config = {
-    "theme": {
-        "extend": {},
-    },
-    "plugins": [
-        "@tailwindcss/typography",
-        "@tailwindcss/components",
-        "@tailwindcss/base",
-        "@tailwindcss/utilities",
-    ],
-}
+# webhooks = api.webhooks
 
 app = App(
     # admin_dash=rx.AdminDash(models=[Customer]),
@@ -37,11 +14,12 @@ app = App(
 )
 
 
+# app.api.add_api_route("/health", api.api_health, methods=["GET"])
 # setup_api_routes(app.api)
 # add web pages here:
+# app.add_page(component=index_, route="/")
 app.add_page(component=index, route="/")
 # app.add_page(create_document, route="/docs")
 
-
 app.api.add_api_route("/health", api.api_health, methods=["GET"])
-app.api.add_api_route("/webhook/stripe", api.webhooks.stripe, methods=["POST"])
+# app.api.add_api_route("/webhook/stripe", api.webhooks.stripe, methods=["POST"])

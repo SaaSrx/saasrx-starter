@@ -58,9 +58,10 @@ def navbar_items() -> rx.Component:
         rx.box(
             navbar_icon(),
             # Desktop navigation links
-            rx.desktop_only(navbar_desktop()),
+            # rx.desktop_only(navbar_desktop()),
+            navbar_desktop(),  # just do desktop until mobile is ready
             # Mobile menu button
-            rx.mobile_and_tablet(navbar_mobile()),
+            # rx.mobile_and_tablet(navbar_mobile()),
             class_name="flex justify-between items-center h-16",
         ),
         class_name="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",

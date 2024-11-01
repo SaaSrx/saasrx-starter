@@ -78,10 +78,6 @@ def signin_hero() -> rx.Component:
                 "Sign in to your account",  # delete this component after
                 class_name="mt-6 text-3xl font-extrabold text-indigo-800",  #  text-center",
             ),
-            # rx.text(
-            #     "If you have an account, we'll send you a magic link to your email. Otherwise we'll redirect you to purchase access which will create an account.",
-            #     class_name="mt-2 text-sm text-indigo-700/80",
-            # ),
         ),
         text_align="center",
         justify="center",
@@ -120,8 +116,7 @@ def email_signin_form() -> rx.Component:
                     rx.button(
                         "Send Magic Link Or Checkout",
                         disabled=AuthState.input_invalid,
-                        color_scheme="indigo",
-                        width="100%",
+                        # class_name="bg-indigo-600 text-white hover:bg-indigo-800",
                     ),
                     as_child=True,
                 ),

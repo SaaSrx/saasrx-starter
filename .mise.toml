@@ -50,3 +50,9 @@
 
 [tasks."test:email"]
     run = "uv run python -m pytest tests/test_email.py"
+
+[tasks.release]
+    run = "git archive -o releases/starterkit.zip HEAD"
+
+[tasks.docs] # deploy the website with mkdocs
+    run = "cd docs && uv run mkdocs serve"

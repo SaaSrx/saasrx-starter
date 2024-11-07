@@ -1,59 +1,77 @@
 import reflex as rx
 
-from saas.state import AuthState
+from saas.state import AuthState, MenuState
+
+
+def payment_success() -> rx.Component:
+    return rx.flex(
+        rx.box(
+            rx.icon("check-circle", class_name="h-12 w-12 text-green-500"),
+            rx.heading("Payment Successful!", class_name="mt-6 text-3xl font-extrabold text-indigo-800"),
+            rx.text(
+                "You can now access the app. Check your email for a link to sign in.",
+                class_name="mt-4 text-lg",
+            ),
+        )
+    )
+
+
+def redirect_cancel_buttons() -> rx.Component:
+    return rx.flex(
+        rx.hstack(
+            rx.alert_dialog.cancel(
+                rx.button(
+                    "Cancel",
+                    on_click=AuthState.redirect_alert,
+                    variant="soft",
+                    color_scheme="gray",
+                ),
+            ),
+            rx.alert_dialog.cancel(
+                rx.button(
+                    "Home",
+                    on_click=MenuState.redirect_home,
+                    variant="soft",
+                    color_scheme="iris",
+                ),
+            ),
+        ),
+        spacing="3",
+        justify="between",
+    )
 
 
 def redirect_alert_dialog() -> rx.Component:
     # return rx.container(
-    return rx.alert_dialog.root(
-        rx.alert_dialog.content(
-            rx.flex(
-                rx.alert_dialog.title(
-                    "Lets get you started!",
-                    class_name="mt-6 text-3xl font-extrabold text-indigo text-center",
-                ),
-                rx.alert_dialog.description(
-                    f"No account found, purchase access for: {AuthState.entered_user_email}",
-                    class_name="my-4 text-md",
-                ),
-                direction="column",
-                spacing="2",
-                align="stretch",
-                justify="center",
-            ),
-            rx.flex(
-                rx.hstack(
-                    rx.alert_dialog.cancel(
-                        rx.button(
-                            "Cancel",
-                            on_click=AuthState.redirect_alert,
-                            variant="soft",
-                            color_scheme="gray",
+    return rx.box(
+        rx.alert_dialog.root(
+            rx.alert_dialog.content(
+                rx.flex(
+                    rx.alert_dialog.title(
+                        "Lets get you started!",
+                        class_name="mt-6 text-3xl font-extrabold text-indigo text-center",
+                    ),
+                    rx.box(
+                        rx.alert_dialog.action(
+                            rx.button(
+                                "Purchase Access",
+                                on_click=AuthState.redirect_to_external_purchase,
+                                size="4",
+                                class_name="w-[100%] justify-center",  # class_name="bg-indigo-600 text-white hover:bg-indigo-800",
+                            ),
                         ),
                     ),
-                    rx.alert_dialog.cancel(
-                        rx.button(
-                            "Home",
-                            on_click=rx.redirect("/"),
-                            variant="soft",
-                            color_scheme="iris",
-                        ),
+                    rx.alert_dialog.description(
+                        f"No account found for: {AuthState.entered_user_email}. You need to purchase an account.",
+                        class_name="my-5 text-md",
                     ),
+                    direction="column",
+                    spacing="2",
                 ),
-                rx.alert_dialog.action(
-                    rx.button(
-                        "Purchase Access",
-                        on_click=AuthState.redirect_to_external_purchase,
-                        class_name="bg-indigo-600 text-white hover:bg-indigo-800",
-                    ),
-                ),
-                spacing="3",
-                justify="between",
-                # class_name="flex justify-between",
+                redirect_cancel_buttons(),
             ),
-            width="50%",
+            open=AuthState.show_redirect_alert,
         ),
-        open=AuthState.show_redirect_alert,
     )
 
 

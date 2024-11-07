@@ -2,7 +2,7 @@ from fastapi import Request
 
 from saas.rxext import console
 from saas.rxext.endpoints import Endpoint
-from saas.saas_config import secrets
+from saas.saas_secrets import secrets
 from saas.utils import stripe_util
 
 webhook_secret = secrets.stripe_webhook_secret
@@ -10,6 +10,9 @@ webhook_secret = secrets.stripe_webhook_secret
 
 class WebhookHandler(Endpoint):
     route = "webhook"
+
+
+# ---- STRIPE WEBHOOK HANDLER ----
 
 
 async def _handle_default_event(data_object: dict):
@@ -29,10 +32,17 @@ async def _handle_payment_intent_attached(data_object: dict):
     # Add your custom logic here
 
 
+async def _handle_checkout_session_completed(data_object: dict):
+    """Handle checkout session completed event."""
+    console.log(f"Checkout Session Success: {data_object=}")
+    # Add your custom logic here
+
+
 _handlers = {
     # Add more handlers as needed
     "payment_intent.succeeded": _handle_payment_intent_succeeded,
     "payment_method.attached": _handle_payment_intent_attached,
+    "checkout.session.completed": _handle_checkout_session_completed,
     "default": _handle_default_event,
 }
 

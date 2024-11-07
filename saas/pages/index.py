@@ -16,21 +16,14 @@ def get_started() -> rx.Component:
 
 
 def index() -> rx.Component:
-    """
-    main index page.  can check status with
-    secrets.status_mode
-    """
+    """The index page"""
     return rx.box(
         navbar.navbar(),
         features.features(),
-        # rx.vstack(
-        # rx.spacer(),
-        #     rx.spacer(),
-        #     pricing(),
-        #     rx.spacer(),
-        #     testimonials(),
-        #     rx.spacer(),
-        #     get_started(),
-        # ),
-        # class_name="min-h-screen bg-white",
+        rx.flex(
+            # features.included_card(),
+            # features.included_card(),
+            spacing="5",
+            justify="center",
+        ),
     )

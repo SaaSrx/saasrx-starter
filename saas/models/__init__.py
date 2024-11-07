@@ -2,46 +2,66 @@ from datetime import datetime, timezone
 from typing import Optional
 
 import reflex as rx
-from sqlmodel import Column, DateTime, Field, func
+from sqlmodel import JSON, Column, DateTime, Field, func
 
 
 class User(rx.Model, table=True):
     """store customer information"""
 
-    email: str
+    email: str = Field(primary_key=True, unique=True)
 
 
-class Payment(rx.Model, table=True):
-    """store payment information from stripe checkout"""
+class MagicLinkAuth(rx.Model, table=True):
+    """Store magic link authentication tokens"""
 
-    id: int
-    amount: int  # in cents
-    status: str
-    user_email: Optional[str] = Field(foreign_key="user.email")
-
-    # timezones related
+    # email: str = Field(primary_key=True)
+    user_id: int = Field(foreign_key="user.id")
+    token: str = Field(index=True)
+    attempts: int = Field(default=0)  # Track number of attempts
     created: datetime = Field(
-        datetime.now(timezone.utc),
         sa_column=Column(
-            DateTime(timezone=True), server_default=func.now(), nullable=False
+            DateTime(timezone=True),
+            server_default=func.now(),
+            nullable=False,
         ),
     )
-    updated: datetime = Field(
-        datetime.now(timezone.utc),
-        sa_column=Column(
-            DateTime(timezone=True), server_default=func.now(), nullable=False
-        ),
+    expiration: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now(), nullable=False),
     )
 
-    def dict(self, *args, **kwargs) -> dict:
-        """Serialize method."""
-        d = super().dict(*args, **kwargs)
-        d["created"] = self.created.replace(microsecond=0).isoformat()
-        d["updated"] = self.updated.replace(microsecond=0).isoformat()
-        return d
+    last_attempt: Optional[datetime] = Field(default=None)  # Track last attempt time
 
 
-def setup_admin_dash(app: rx.App):
+# class Payment(rx.Model, table=True):
+#     """store payment information from stripe checkout"""
+
+#     id: int
+#     amount: int  # in cents
+#     status: str  # pending, completed, refunded
+
+#     user_email: Optional[str] = Field(foreign_key="user.email")
+#     data: dict = Field(sa_column=Column(JSON), default={})
+
+#     # timezones related
+#     created: datetime = Field(
+#         datetime.now(timezone.utc),
+#         sa_column=Column(DateTime(timezone=True), server_default=func.now(), nullable=False),
+#     )
+
+#     updated: datetime = Field(
+#         datetime.now(timezone.utc),
+#         sa_column=Column(DateTime(timezone=True), server_default=func.now(), nullable=False),
+#     )
+
+#     def dict(self, *args, **kwargs) -> dict:
+#         """Serialize method."""
+#         d = super().dict(*args, **kwargs)
+#         d["created"] = self.created.replace(microsecond=0).isoformat()
+#         d["updated"] = self.updated.replace(microsecond=0).isoformat()
+#         return d
+
+
+def setup_admin_dash(app: rx.App, tables: list[rx.Model] = None):
     """
     Setup the admin dashboard.
     can pass as an arg to App instantiation like:
@@ -53,5 +73,6 @@ def setup_admin_dash(app: rx.App):
     or use this function to set it up later.
 
     """
-    app.admin_dash = rx.AdminDash(models=[User, Payment])
+    tables = tables or [User, MagicLinkAuth]
+    app.admin_dash = rx.AdminDash(models=tables)
     return app

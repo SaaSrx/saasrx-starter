@@ -2,6 +2,11 @@ import reflex as rx
 
 features_list = [
     {
+        "name": "Entirely Python",
+        "description": "Frontend and backend are both written in Python. No more context switching.",
+        "icon": "worm",  # "cloud",
+    },
+    {
         "name": "Lightning Fast Setup",
         "description": "Get your SaaS up and running in minutes with our pre-built components and templates.",
         "icon": "zap",
@@ -26,12 +31,22 @@ features_list = [
         "description": "Pre-configured database schemas and models for common use cases.",
         "icon": "database",
     },
-    {
-        "name": "Deploy Instantly",
-        "description": "One-click deployment to your favorite cloud provider.",
-        "icon": "cloud",
-    },
 ]
+
+
+def included_card() -> rx.Component:
+    return rx.card(
+        rx.flex(
+            rx.box(
+                rx.text("✔"),
+                rx.text("Authentication"),
+                rx.text("Magic Email, Social Logins"),
+            ),
+            # direction="row",
+            spacing="4",
+            class_name="text-left",
+        )
+    )
 
 
 def features() -> rx.Component:
@@ -43,11 +58,17 @@ def features() -> rx.Component:
                     class_name="text-base text-indigo-600 font-semibold tracking-wide uppercase",
                 ),
                 rx.text(
-                    "Everything you need to succeed",
+                    # "Do everything in Python to launch your SaaS product faster.",
+                    "Everything in Python?",
                     class_name="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-indigo-900 sm:text-4xl",
                 ),
                 rx.text(
-                    "Launch your SaaS product with confidence using our complete toolkit.",
+                    # "Do everything in Python to launch your SaaS product faster.",
+                    "Everything.",
+                    class_name="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-indigo-900 sm:text-4xl",
+                ),
+                rx.text(
+                    "Launch your SaaS product with confidence using our complete toolkit and guide.",
                     class_name="mt-4 max-w-2xl text-xl text-indigo-600/80 lg:mx-auto",
                 ),
                 class_name="lg:text-center",
@@ -61,7 +82,8 @@ def features() -> rx.Component:
                                     feature["icon"],
                                     class_name="h-6 w-6 aria-hidden:true",
                                 ),
-                                class_name="absolute h-12 w-12 flex items-center justify-center rounded-md bg-indigo-600 text-white",
+                                # class_name="absolute h-12 w-12 flex items-center justify-center rounded-md bg-indigo-600 text-white",
+                                class_name="h-12 w-12 flex items-center justify-center rounded-md bg-indigo-600 text-white",
                             ),
                             rx.box(
                                 rx.heading(
@@ -75,7 +97,7 @@ def features() -> rx.Component:
                                 ),
                                 class_name="ml-16",
                             ),
-                            class_name="relative",
+                            class_name="sm:flex",
                         )
                         for feature in features_list
                     ],

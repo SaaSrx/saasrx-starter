@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from saas.saas_config import secrets
+from saas.saas_secrets import secrets
 from saas.utils.email_util import ResendAPIEmailSender, ResendSDKEmailSender
 
 

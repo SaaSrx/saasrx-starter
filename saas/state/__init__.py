@@ -1,1 +1,1 @@
-from saas.state.state import AuthState, CheckoutState, MenuState, State
+from saas.state.state import AuthState, CheckoutState, MenuItem, MenuState, State

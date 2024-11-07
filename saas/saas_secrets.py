@@ -19,6 +19,9 @@ class Secrets(SecretConfig):
 
     # for email sending
     resend_api_key: str = _EMPTY
+    # for supabase
+    supabase_url: str = _EMPTY
+    supabase_key: str = _EMPTY
 
     # db info will change based on prod/test
     db_host: str = _EMPTY

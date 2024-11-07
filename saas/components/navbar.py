@@ -2,7 +2,6 @@ import reflex as rx
 
 from saas.state import MenuItem, MenuState
 
-
 # ---- Navbar General Components
 
 
@@ -74,33 +73,25 @@ def navbar_desktop_() -> rx.Component:
 def navbar_mobile() -> rx.Component:
     # link_style = "text-gray-600 hover:text-gray-900"
     link_style = ""
-    btn_style = "px-6 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-800 text-white transition-colors"
-    # btn_style = "bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700"
-    # btn_style = ""
+    # btn_style = "px-6 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-800 text-white transition-colors"
+    btn_style = "bg-indigo-500 hover:bg-indigo-800 transition-colors"
 
-    # def handler(item):
-    #     return rx.match(
-    #         item.typeof,
-    #         ("link", rx.menu.item(item.text, href=item.link, class_name=link_style)),
-    #         ("button", rx.menu.item(item.text, href=item.link, class_name=btn_style)),
-    #         rx.text("Unknown MenuType."),
-    #     )
-
-    def link_func(text, href):  # or `partial(rx.link, class_name=link_style)`
+    def link_func(text, href):
         return rx.menu.item(text, href=href, class_name=link_style)
 
     def btn_func(text, href):
-        return rx.menu.item(text, href=href, class_name=btn_style)
+        return rx.menu.item(rx.link(text, href=href, class_name="text-white"), class_name=btn_style)
 
     return rx.box(
         rx.menu.root(
             rx.menu.trigger(
                 rx.icon("menu", size=30),
             ),
-            rx.menu.content(,
+            rx.menu.content(
                 make_menu_items(items=MenuState.menu_items, link_func=link_func, btn_func=btn_func),
             ),
-        )
+        ),
+        class_name="flex",
     )
 
 

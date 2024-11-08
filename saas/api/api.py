@@ -1,3 +1,4 @@
+import reflex as rx
 from fastapi import Request
 
 # import .webhooks as webhooks
@@ -26,6 +27,9 @@ ROUTES (dict): A dictionary mapping route paths to their corresponding handler f
 # @api("/health", methods=["GET"])
 # or just add to the API_ROUTES list
 async def api_health(req: Request):
+    if not rx.utils.is_prod_mode():
+        console.log(f"Not in production mode.")
+
     console.log(f"Got health check: {req=}")
     return {"status": "okay", "message": "retrieved health check"}
 
@@ -41,18 +45,3 @@ async def api_health(req: Request):
 #     "/health": (api_health, {"methods": ["GET"]}),
 #     "/webhook": (api_webhook, {"methods": ["POST"]}),
 # }
-
-
-# def setup_api_routes(app: APIRouter, routes: dict = ROUTES):
-#     """
-#     Sets up API routes for the given FastAPI router.
-
-#     This function iterates over the ROUTES dictionary and adds each route-handler
-#     pair to the provided APIRouter instance.
-
-#     Args:
-#         app (APIRouter): The FastAPI router instance to which the routes will be added.
-#     """
-#     for route, fn in routes.items():
-#         fn, opts = (fn, {}) if callable(fn) else fn
-#         app.add_api_route(route, fn, **opts)

@@ -3,7 +3,7 @@ from fastapi import Request
 from saas.rxext import console
 from saas.rxext.endpoints import Endpoint
 from saas.saas_secrets import secrets
-from saas.utils import stripe_util
+from saas.rxext.utils import stripe_util
 
 webhook_secret = secrets.stripe_webhook_secret
 

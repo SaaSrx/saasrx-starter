@@ -1,20 +1,26 @@
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import reflex as rx
 from sqlmodel import delete, select
 
 from rxconfig import config
-from saas.models import MagicLinkAuth
+from saas.models import MagicLink, MagicLinkConfig
+from saas.rxext import console
+from saas.rxext.utils import hash_token, verify
 
 default_expiration: timedelta = timedelta(minutes=60)
-default_rate_limit: int = 5
 
 
 class MagicLinkMixin:
     session_token: str = rx.LocalStorage(sync=True)
 
-    def _check_recent(self, email: str, rate_limit: int, expiration_delta: timedelta) -> bool:
+    def _check_recent(
+        self,
+        email: str,
+        rate_limit: int = MagicLinkConfig.DEFAULT_RATE_LIMIT,
+        expiration_delta: timedelta = MagicLinkConfig.DEFAULT_EXPIRATION,
+    ) -> bool:
         """Check if user hasn't exceeded rate limit for magic link requests
 
         Args:
@@ -28,11 +34,12 @@ class MagicLinkMixin:
         with rx.session() as session:
             # Get the most recent magic link record
             auth = session.get(MagicLinkAuth, email)
+            console.log(f"got auth: {auth=}")
             if not auth:
                 return True
 
             # Check if within rate limit window
-            time_window = datetime.utcnow() - expiration_delta
+            time_window = datetime.now(timezone.utc) - expiration_delta
             if auth.last_attempt and auth.last_attempt > time_window:
                 if auth.attempts >= rate_limit:
                     return False
@@ -65,8 +72,8 @@ class MagicLinkMixin:
             raise ValueError("Too many recent attempts. Please wait and try again.")
 
         # Generate a secure token
-        token = secrets.token_urlsafe(32)
-        expiration = datetime.utcnow() + expiration_delta
+        token = secrets.token_urlsafe()
+        expiration = datetime.now(timezone.utc) + expiration_delta
 
         # Store the token, email, and expiration in your database
         # This is a placeholder - implement your database storage
@@ -155,35 +162,20 @@ class MagicLinkMixin:
             session.execute(delete(MagicLinkAuth).where(MagicLinkAuth.email == email))
             session.commit()
 
-    def send_magic_link(self, email: str) -> bool:
-        """Public method to generate and send magic link
 
-        Args:
-            email: User's email
+class MagicLinkAuthState(rx.State):
+    def on_load(self):
+        params = self.router.params
+        email = params.get("email")
+        token = params.get("token")
+        if not email or not token:
+            return rx.redirect("/signin")
+        token_valid = self._validate_magic_link(email, token)
+        if not token_valid:
+            return rx.redirect("/signin")
 
-        Returns:
-            bool: True if link was generated and sent successfully
-        """
-        try:
-            magic_link = self._generate_link(email)
-            # TODO: Implement email sending logic here
-            # For now, just print the link
-            print(f"Magic link generated: {magic_link}")
-            return True
-        except ValueError as e:
-            print(f"Error generating magic link: {e}")
-            return False
+        return rx.redirect("/dashboard")
 
 
-# class MagicLinkAuth(rx.State):
-#     def on_load(self):
-#         params = self.router.params
-#         email = params.get("email")
-#         token = params.get("token")
-#         if not email or not token:
-#             return rx.redirect("/signin")
-#         token_valid = self._validate_magic_link(email, token)
-#         if not token_valid:
-#             return rx.redirect("/signin")
-
-#         return rx.redirect("/dashboard")
+if __name__ == "__main__":
+    inst = MagicLinkMixin()

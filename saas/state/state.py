@@ -1,13 +1,15 @@
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from enum import StrEnum
+from typing import Optional
 
 import reflex as rx
 
 from rxconfig import config
-from saas.models import MagicLinkAuth, User
+from saas.models import MagicLink, User
 from saas.rxext import console
 from saas.saas_secrets import secrets
-from saas.utils.email_util import invalid_email
+from saas.rxext.utils.email_util import invalid_email
 
 
 class MenuType(StrEnum):
@@ -32,7 +34,35 @@ MenuItems = [
 
 
 class State(rx.State):
-    pass
+    @rx.var(cache=True)
+    def is_prod_mode(self):
+        return rx.utils.exec.is_prod_mode()
+
+    def gen_fake_user(self):
+        try:
+            user = User(email="graham@test.com")
+            console.log(f"make user: {user=}")
+            with rx.session() as session:
+                session.add(user)
+                session.commit()
+        except Exception as err:
+            console.log(f"Error creating user: {err=}")
+        # console.log("doing this action")
+        # user = User(email="graham@test.com")
+        # console.log(f"Generated fake user: {user}")
+        # auth = MagicLink(user_email=user.email)
+        # console.log(f"Generated fake auth: {auth}")
+        # with rx.session() as session:
+        #     session.add(user)
+        #     session.add(auth)
+        #     session.commit()
+
+    def get_fake_auth(self):
+        with rx.session() as session:
+            users = session.exec(
+                MagicLink.select().where(User.email == "graham@test.com"),
+            ).all()
+            console.log(f"got users in get-fake-auth= {users=}")
 
 
 class DownloadState(State):
@@ -81,7 +111,7 @@ def _check_email(email: str):
 
 async def _get_user(email: str) -> User:
     with rx.session() as session:
-        user = session.exec(MagicLinkAuth.select().where(MagicLinkAuth.email == email)).first()
+        user = session.exec(MagicLink.select().where(MagicLink.email == email)).first()
         return user
 
 
@@ -106,9 +136,74 @@ class AuthState(State):
         self.show_redirect_alert = not self.show_redirect_alert
         console.log("show redirect alsert")
 
-    def handle_login(self, data: dict = None):
-        console.log(f"User login: {data=}")
-        user_found = False
-        yield rx.toast.error(f"Email not found: {data['email']}")
-        if not user_found:
-            return self.redirect_alert()
+    def _check_recent(self, *args, **kwargs):
+        return True
+
+    def _get_user_from_email(self, email: str) -> User | bool:
+        with rx.session() as session:
+            user = session.exec(User.select().where(User.email.lower() == email)).first()
+            if not user:
+                return False
+        return user
+
+    def _get_magic_link(self, user: User) -> Optional[MagicLink]:
+        with rx.session() as session:
+            magic_link = session.exec(
+                MagicLink.select().where(MagicLink.user_email == user.email, MagicLink.valid_link())
+            ).first()
+            if magic_link and magic_link.attempts_remaining > 0:
+                magic_link.attempts_remaining -= 1  # Decrement remaining attempts
+                session.add(magic_link)
+                session.commit()
+                return magic_link
+        return None
+
+    def _generate_magic_link(self, user: User):
+        with rx.session() as session:
+            magic_link = MagicLink(user_email=user.email)
+            session.add(magic_link)
+            session.commit()
+        return magic_link
+
+    async def on_load_verify(self):
+        params = self.router.page.params
+        email = params.get("email")
+        token = params.get("token")
+        redir = params.get("redir")
+
+    async def handle_login(self, data: dict = None):
+        user = self._get_user_from_email(email=data["email"])
+        if user:
+            console.log(f"got user: {user=}")
+            magic_link = self._get_magic_link(user=user)
+            user_check = self._check_recent(user=user, magic_link=magic_link)
+            console.log(f"User check: {user_check=}")
+
+            if rx.utils.exec.is_prod_mode():
+                # Send email
+                console.log(f"Sending email to: {user.email}")
+            else:
+                console.log(f"click this magic link: {magic_link=}")
+
+            # if user_check:
+            #     magic_link = self._generate_link(user=user)
+
+        # console.log(f"User login: {data=}")
+
+        # user_found = False
+        # # check_recent = self._check_recent(data["email"])
+        # with rx.session() as session:
+        #     # user = session.get(User, (data["email"],))
+        #     # statement = select(User).where(User.user_email == email)
+        #     statement = User.select().where(User.email == data["email"])
+        #     console.log(f"made statement: {statement=}")
+        #     user = session.exec(statement).first()
+        #     # user = session.exec(User.select().where(User.email == data["email"])).first()
+        #     if user:
+        #         console.log(f"got user: {user=}")
+        #     else:
+        #         console.log(f"no user found: {data['email']=}")
+        # # breakpoint()
+        # # yield rx.toast.error(f"Email not found: {data['email']}")
+        # # if not user_found:
+        # #     return self.redirect_alert()

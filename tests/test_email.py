@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from saas.saas_secrets import secrets
-from saas.utils.email_util import ResendAPIEmailSender, ResendSDKEmailSender
+from saas.rxext.utils.email_util import ResendAPIEmailSender, ResendSDKEmailSender
 
 
 class TestEmailUtil(unittest.TestCase):

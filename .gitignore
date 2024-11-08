@@ -22,3 +22,8 @@ _ignore/
 # ignore docs until i know how i want to parse/present
 docs/
 releases/
+# ignore database migrations until solidify the database
+alembic/
+alembic.ini
+
+.env

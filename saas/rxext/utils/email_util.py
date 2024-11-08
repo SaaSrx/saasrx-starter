@@ -101,14 +101,3 @@ def verify_otp(params: dict):
     console.log(f"verifying otp {params=}")
     response = supabase.auth.verify_otp(params)
     return response
-
-
-# Uncomment to test
-# if __name__ == '__main__':
-#     try:
-#         data = send_email_using_resend_sdk("onboarding@resend.dev", "delivered@resend.dev", "Hello World", "<strong>it works!</strong>")
-#         print(json.dumps(data, indent=2))
-#         data = send_email_using_resend_api("Acme <onboarding@resend.dev>", "delivered@resend.dev", "hello world", "<strong>it works!</strong>")
-#         print(json.dumps(data, indent=2))
-#     except requests.exceptions.HTTPError as err:
-#         print(f"Error: {err}")

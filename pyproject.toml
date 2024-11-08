@@ -6,7 +6,14 @@
     authors = [{ name = "graham", email = "graham.annett@gmail.com" }]
     # cant use 3.13 if deploying on reflex
     requires-python = ">=3.12"
-    dependencies = ["reflex>=0.6.3", "resend>=2.4.0", "stripe"]
+    dependencies = [
+    "bcrypt>=4.2.0",
+    "mkdocs-material>=9.5.43",
+    "reflex>=0.6.3",
+    "resend>=2.4.0",
+    "stripe",
+    "supabase>=2.9.1",
+]
 
 [tool.uv]
     dev-dependencies = ["pytest>=8.3.3"]

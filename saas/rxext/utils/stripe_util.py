@@ -4,7 +4,7 @@ from fastapi import HTTPException, Request
 from saas.rxext import console
 from saas.saas_secrets import secrets
 
-webhook_secret = secrets.stripe_webhook_secret
+webhook_secret: str = secrets["stripe_webhook_secret"]
 
 
 def verify_webhook_signature(payload: dict, headers: dict) -> dict:
@@ -37,7 +37,7 @@ def verify_webhook_signature(payload: dict, headers: dict) -> dict:
         )
 
 
-def handle_event(event: dict) -> None:
+async def handle_event(event: dict) -> None:
     """Handle different types of Stripe events.
 
     Args:
@@ -46,6 +46,7 @@ def handle_event(event: dict) -> None:
     event_type = event["type"]
     data_object = event["data"]["object"]
 
+    # TODO: turn this into dict/case match with event callback
     if event_type == "payment_intent.succeeded":
         console.log(f"PaymentIntent Success: {data_object=}")
         # Add your custom logic here
@@ -66,5 +67,26 @@ async def process_webhook(req: Request) -> dict:
         dict: A success message.
     """
     event = await verify_webhook_signature(req)
-    handle_event(event)
+    event_resp = await handle_event(event)
     return {"success": True}
+
+
+def get_payments(pay_id: str) -> list:
+    """
+    Retrieve all payments from Stripe for the given pay_id.
+
+    Args:
+        pay_id (str): The payment identifier to filter payments.
+
+    Returns:
+        list: A list of payment objects associated with the pay_id.
+
+    Raises:
+        HTTPException: If an error occurs while fetching payments.
+    """
+    try:
+        payments = stripe.PaymentIntent.list(metadata={"pay_id": pay_id})
+        return payments.data
+    except stripe.error.StripeError as e:
+        console.error(f"Error fetching payments for pay_id {pay_id}: {e}")
+        raise HTTPException(status_code=400, detail="Failed to retrieve payments from Stripe.")

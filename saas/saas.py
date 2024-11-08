@@ -2,9 +2,12 @@ import reflex as rx
 
 import saas.api as api
 from saas.pages import index, signin_page
-from saas.rxext.app import App
+from saas.rxext.app import App, make_admin_dash
 
-app = App(theme=rx.theme(appearance="light", radius="large", accent_color="iris"))
+app = App(
+    theme=rx.theme(appearance="light", radius="large", accent_color="iris"),
+    admin_dash=make_admin_dash(),
+)
 
 
 # add web pages here:

@@ -48,6 +48,19 @@
     [STRIPE INFO] $stripe_pub_key
     '''
 
+[tasks."db:clean"]
+    run = "trash reflex.db alembic/ alembic.ini"
+
+[tasks."db:init"]
+    run = "uv run reflex db init"
+
+[tasks."db:reset"]
+    depends = ["db:clean", "db:init"]
+
+[tasks."db:migrate"]
+    run = "uv run reflex db makemigrations && uv run reflex db migrate"
+
+
 [tasks."test:email"]
     run = "uv run python -m pytest tests/test_email.py"
 

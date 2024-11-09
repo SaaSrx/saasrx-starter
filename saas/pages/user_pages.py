@@ -18,10 +18,23 @@ def fake_gen_button() -> rx.Component:
     )
 
 
+def verify_request_page() -> rx.Component:
+    return rx.box(
+        rx.box(
+            rx.flex(
+                rx.box(
+                    rx.heading("Check your email"),
+                    class_name="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg",
+                    # class_name="max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg",
+                ),
+            ),
+            class_name="min-h-screen bg-gradient-to-b from-indigo-50 to-white flex items-center justify-center px-4",
+        ),
+    )
+
+
 def signin_page() -> rx.Component:
     return rx.box(
-        fake_user_button(),
-        fake_gen_button(),
         signin_components.redirect_alert_dialog(),
         rx.box(
             rx.flex(
@@ -39,7 +52,8 @@ def signin_page() -> rx.Component:
 
 
 def auth_verify_page() -> rx.Component:
-    return 
+    return rx.heading("User Authed")
+
 
 def success_page() -> rx.Component:
     return signin_components.payment_success()

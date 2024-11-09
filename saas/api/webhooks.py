@@ -1,8 +1,8 @@
 from fastapi import Request
 
+from saas.app_secret import secrets
 from saas.rxext import console
 from saas.rxext.endpoints import Endpoint
-from saas.saas_secrets import secrets
 from saas.rxext.utils import stripe_util
 
 webhook_secret = secrets.stripe_webhook_secret
@@ -61,6 +61,7 @@ async def stripe(req: Request) -> dict:
         dict: A dictionary indicating the success of the operation and the response from the event handler.
     """
     data = await req.json()  # rather than await req.body()
+    console.log(f"Incoming from stripe webhook: {data=}")
     event = stripe_util.verify_webhook_signature(payload=data, headers=req.headers)
 
     # Handle the event

@@ -18,54 +18,71 @@
 
     resend_api_key = "re_"
 
-[tasks.wdev]
-    run = "trash .web/ && uv run reflex run"
 
-[tasks.deploy]
-    #  options removed for now:
-    run = "uv run reflex deploy --no-interactive --deployment-key $deployment_key --region $deployment_region --env stripe_web_url=$stripe_web_url --env site_domain=$site_domain"
-    # shell = "bash -c"
-    # run = """uv run reflex deploy \
-    # --no-interactive \
-    # --deployment-key $deployment_key \
-    # --region $deployment_region \
-    # --env status_mode=$status_mode \
-    # --env stripe_key=$stripe_key --env stripe_web_url=$stripe_web_url \
-    # --env db_host=$db_host --env db_name=$db_name --env db_user=$db_user --env db_port=$db_port --env db_password=$db_password \
-    # --env email_domain=$email_domain --env email_from=$email_from \
-    # --env resend_api_key=$resend_api_key \
-    # --env site_domain=$site_domain
-    # """
+    # [tasks.deploy]
+    #     #  options removed for now:
+    #     # RUN WITH `MISE_ENV=prod mise run deploy`
+    #     run = "uv run reflex deploy --no-interactive --deployment-key $deployment_key --region $deployment_region --env stripe_web_url=$stripe_web_url --env site_domain=$site_domain"
+    #     # shell = "bash -c"
+    #     # run = """uv run reflex deploy \
+    #     # --no-interactive \
+    #     # --deployment-key $deployment_key \
+    #     # --region $deployment_region \
+    #     # --env status_mode=$status_mode \
+    #     # --env stripe_key=$stripe_key --env stripe_web_url=$stripe_web_url \
+    #     # --env db_host=$db_host --env db_name=$db_name --env db_user=$db_user --env db_port=$db_port --env db_password=$db_password \
+    #     # --env email_domain=$email_domain --env email_from=$email_from \
+    #     # --env resend_api_key=$resend_api_key \
+    #     # --env site_domain=$site_domain
+    #     # """
 
 [tasks.dev]
     run = "uv run reflex run"
 
+[tasks.wdev]
+    run = "trash .web/ && uv run reflex run"
+
+[tasks."db:clean"]
+    description = "Clean by trashing alembic & db files"
+    run = "trash reflex.db alembic/ alembic.ini"
+
+[tasks."db:init"]
+    description = "Initialize the database"
+    run = "uv run reflex db init"
+
 [tasks."db:info"]
     # use this to verify the db info
+    description = "Prints the db info"
     run = '''
     echo USING: $status_mode \\n\
     [DB INFO] $db_host $db_user $db_name \\n\
     [STRIPE INFO] $stripe_pub_key
     '''
 
-[tasks."db:clean"]
-    run = "trash reflex.db alembic/ alembic.ini"
-
-[tasks."db:init"]
-    run = "uv run reflex db init"
 
 [tasks."db:reset"]
-    depends = ["db:clean", "db:init"]
+    description = "Reset the database by clean and then reinit"
+    depends = ["db:clean"]
+    # need to run like this so that it runs sequentially, otherwise must pass --jobs or MISE_JOBS
+    run = "mise run db:init"
 
 [tasks."db:migrate"]
     run = "uv run reflex db makemigrations && uv run reflex db migrate"
 
 
 [tasks."test:email"]
+    description = "Run the email tests"
     run = "uv run python -m pytest tests/test_email.py"
 
+[tasks."test:all"]
+    description = "Run all the tests"
+    run = "uv run python -m pytest tests/"
+
 [tasks.release]
+    #  allow users to download the zip until github integration is setup
+    description = "Create a release zip to download the code"
     run = "git archive -o releases/starterkit.zip HEAD"
 
 [tasks.docs] # deploy the website with mkdocs
+    description = "Deploy the website with mkdocs"
     run = "cd docs && uv run mkdocs serve"

@@ -1,11 +1,9 @@
 from collections import defaultdict
 from typing import Any
 
-from reflex import page
-from reflex.app import DECORATED_PAGES
 from reflex.page import get_decorated_pages
 
-# NOTE: FRONTEND PAGES is dict with {app_name: list[(render_fn, kwargs)]]}
+FRONTEND_DECORATED_PAGES = get_decorated_pages()
 API_DECORATED_PAGES: dict[str, list] = defaultdict(list)
 
 

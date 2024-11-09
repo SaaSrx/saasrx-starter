@@ -1,4 +1,20 @@
+from dataclasses import dataclass
+
 from reflex.config import Config
+
+
+@dataclass
+class DownloadInfo:
+    """
+    A data class that holds information about a download.
+
+    Attributes:
+        filepath (str): The path where the file is to be downloaded.
+        filename (str): The name of the file to be downloaded.
+    """
+
+    filepath: str
+    filename: str
 
 
 class Config(Config):

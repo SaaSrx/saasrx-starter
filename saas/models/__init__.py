@@ -1,5 +1,6 @@
 import secrets
 from datetime import datetime, timedelta, timezone
+from enum import Enum, auto
 from typing import Optional
 
 import bcrypt
@@ -21,12 +22,21 @@ class TableConfig:
             return datetime.now(timezone.utc) + cls.DEFAULT_EXPIRATION
 
 
+class AccessLevel(Enum):
+    """User access levels"""
+
+    ADMIN = 0
+    FULL_ACCESS = 1
+    NO_PAYMENT = 2
+
+
 class User(rx.Model, table=True):
     """store customer information"""
 
     # email: str  # = Field(primary_key=True, unique=True)
     email: str = Field(unique=True)
-    full_access: bool = Field(default=False)
+    # access_level: int = Field(default=0)
+    access_level: AccessLevel = Field(default=AccessLevel.NO_PAYMENT)
     is_admin: bool = Field(default=False)
 
 

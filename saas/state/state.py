@@ -1,14 +1,14 @@
 from dataclasses import dataclass
-from datetime import datetime, timezone
 from enum import StrEnum
 from typing import Optional
 
 import reflex as rx
 
 from rxconfig import config
+from saas.app_config import release_download
+from saas.app_secret import secrets
 from saas.models import MagicLink, User
-from saas.rxext import console
-from saas.saas_secrets import secrets
+from saas.rxext import console, is_prod_mode
 from saas.rxext.utils.email_util import invalid_email
 
 
@@ -34,9 +34,10 @@ MenuItems = [
 
 
 class State(rx.State):
+    # base state class
     @rx.var(cache=True)
     def is_prod_mode(self):
-        return rx.utils.exec.is_prod_mode()
+        return is_prod_mode()
 
     def gen_fake_user(self):
         try:
@@ -66,9 +67,10 @@ class State(rx.State):
 
 
 class DownloadState(State):
-    def start_download(self):
-        asset_path, filename = "releases/saasrx.zip", "saasrx.zip"
-        return rx.download(url=asset_path, filename=filename)
+    def download_release(self):
+        # to setup the download for the release you need to symlink with the following:
+        # ln -s "$PWD"/releases/ assets/releases
+        return rx.download(url=release_download.filepath, filename=release_download.filename)
 
 
 class MenuState(State):
@@ -120,6 +122,16 @@ class AuthState(State):
     user_email: str
 
     show_redirect_alert: bool = False
+    _auth_session: MagicLink = None
+
+    # @rx.var(cache=True)
+    # def auth_session(self) -> Optional[MagicLink]:
+    #     return self._auth_session
+
+    @rx.var(cache=True)
+    def session_is_valid(self) -> bool:
+        return True
+        # return self.auth_session is not None
 
     @rx.var
     def invalid_email(self) -> bool:
@@ -140,11 +152,18 @@ class AuthState(State):
         return True
 
     def _get_user_from_email(self, email: str) -> User | bool:
+        """
+        Retrieve a user from the database based on their email address.
+
+        Args:
+            email (str): The email address of the user to retrieve.
+
+        Returns:
+            User | bool: The User object if found, otherwise False.
+        """
         with rx.session() as session:
-            user = session.exec(User.select().where(User.email.lower() == email)).first()
-            if not user:
-                return False
-        return user
+            user = session.exec(User.select().where(User.email == email.lower())).first()
+            return user or False
 
     def _get_magic_link(self, user: User) -> Optional[MagicLink]:
         with rx.session() as session:
@@ -165,25 +184,33 @@ class AuthState(State):
             session.commit()
         return magic_link
 
-    async def on_load_verify(self):
+    def on_load_verify(self):
         params = self.router.page.params
         email = params.get("email")
         token = params.get("token")
         redir = params.get("redir")
+        console.log(f"on_load_verify: {email=}, {token=}, {redir=}")
+        # yield rx.redirect("/dashboard")
 
-    async def handle_login(self, data: dict = None):
-        user = self._get_user_from_email(email=data["email"])
+    def handle_login(self, data: dict = None):
+        email = data.get("email")
+        user = self._get_user_from_email(email=email)
+        console.log(f"1User login: {user=}")
         if user:
-            console.log(f"got user: {user=}")
+            # if we have a user, send magic link
             magic_link = self._get_magic_link(user=user)
+            console.log(f"2User login: {magic_link=}")
             user_check = self._check_recent(user=user, magic_link=magic_link)
-            console.log(f"User check: {user_check=}")
+            console.log(f"3User check: {user_check=}")
 
-            if rx.utils.exec.is_prod_mode():
+            if self.is_prod_mode:
                 # Send email
-                console.log(f"Sending email to: {user.email}")
+                console.log(f"4sending email to: {user.email}")
             else:
-                console.log(f"click this magic link: {magic_link=}")
+                console.log(f"4click this magic link: {magic_link=}")
+        else:
+            yield rx.redirect(secrets.stripe_web_url + "?prefilled_email=" + email)
+            # sending user to pay for the service
 
             # if user_check:
             #     magic_link = self._generate_link(user=user)

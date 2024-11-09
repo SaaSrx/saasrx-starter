@@ -1,8 +1,8 @@
 import stripe
 from fastapi import HTTPException, Request
 
+from saas.app_secret import secrets
 from saas.rxext import console
-from saas.saas_secrets import secrets
 
 webhook_secret: str = secrets["stripe_webhook_secret"]
 
@@ -23,6 +23,7 @@ def verify_webhook_signature(payload: dict, headers: dict) -> dict:
     # sig_header = req.headers.get("stripe-signature")
 
     try:
+        console.log(f"verify for \n{payload=}\nand\n{headers=}")
         event = stripe.Webhook.construct_event(
             payload=payload,
             sig_header=headers["stripe-signature"],
@@ -30,7 +31,7 @@ def verify_webhook_signature(payload: dict, headers: dict) -> dict:
         )
         return event
     except stripe.error.SignatureVerificationError as e:
-        console.error(f"⚠️  Webhook signature verification failed: {e}\n{payload=}")
+        console.error(f"⚠️ Webhook signature verification failed: {e}\n{payload=}")
         raise HTTPException(
             status_code=400,
             detail="Webhook signature verification failed",

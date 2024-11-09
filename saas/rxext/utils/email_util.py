@@ -5,7 +5,7 @@ import resend
 from supabase import Client, create_client
 
 from saas.rxext import console
-from saas.saas_secrets import secrets
+from saas.app_secret import secrets
 
 resend_api_key = secrets.resend_api_key
 resend.api_key = resend_api_key

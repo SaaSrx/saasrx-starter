@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from reflex.config import Config
+from reflex import config
 
 
 @dataclass
@@ -17,7 +17,21 @@ class DownloadInfo:
     filename: str
 
 
-class Config(Config):
+@dataclass
+class ImageAssets:
+    """
+    A data class that holds information about image assets.
+
+    Attributes:
+        favicon (str): The path to the favicon.
+        app_icon (str): The path to the app icon.
+    """
+
+    favicon: str
+    app_icon: str
+
+
+class Config(config.Config):
     """
     Config class that extends rx.Config.
 

@@ -18,6 +18,7 @@ app.add_page(component=pages.download_page, route="/download")
 app.api.include_router(api_router, prefix="/api")
 
 app.add_page(component=pages.verify_request_page, route="/auth/verify")
+app.add_page(component=pages.payment_success, route="/payment/success")
 # app.add_page(component=pages.verify_request_page, route="/auth/verify", on_load=AuthState.on_load_verify)
 # app.add_page(component=pages.auth_verify_page, route="/auth", on_load=AuthState.on_load_verify)
 # app.add_page(create_document, route="/docs")

@@ -1,6 +1,8 @@
 import reflex as rx
 
-from saas.components import signin_components
+from saas.app_config import config, image_assets
+from saas.components import general, signin_components
+from saas.rxext import console
 from saas.state import State
 
 
@@ -23,9 +25,15 @@ def verify_request_page() -> rx.Component:
         rx.box(
             rx.flex(
                 rx.box(
-                    rx.heading("Check your email"),
+                    # rx.heading(
+                    #     config.formatted_application_name,
+                    #     align="center",
+                    #     size="8",
+                    #     # class_name="text-3xl font-extrabold text-indigo-800 text-uppercase text-center",
+                    # ),
+                    rx.heading("Check your email", class_name="text-center"),
+                    general.homepage_card(button_text="A sign in link has been sent to your email address."),
                     class_name="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg",
-                    # class_name="max-w-md space-y-8 bg-white p-8 rounded-xl shadow-lg",
                 ),
             ),
             class_name="min-h-screen bg-gradient-to-b from-indigo-50 to-white flex items-center justify-center px-4",
@@ -53,10 +61,6 @@ def signin_page() -> rx.Component:
 
 def auth_verify_page() -> rx.Component:
     return rx.heading("User Authed")
-
-
-def success_page() -> rx.Component:
-    return signin_components.payment_success()
 
 
 def dashboard_page() -> rx.Component:

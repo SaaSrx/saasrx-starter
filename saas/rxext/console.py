@@ -34,6 +34,12 @@ def app_log_level(log_level: str | LogLevel = None):
     set_log_level(log_level)
 
 
+def setup_log_level(config_kwargs: dict):
+    if log_level := config_kwargs.pop("loglevel", None):
+        app_log_level(log_level)
+    return config_kwargs
+
+
 __all__ = [
     "LogLevel",
     "debug",
@@ -42,5 +48,6 @@ __all__ = [
     "log",
     "print",
     "set_log_level",
+    "setup_log_level",
     "warn",
 ]

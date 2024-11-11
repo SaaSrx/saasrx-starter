@@ -76,7 +76,7 @@ class DownloadState(State):
 class MenuState(State):
     menu_items: list[MenuItem] = MenuItems
     # ---
-    menu_title: str = config.formated_app_name  # "SaaSrx"  # config.formated_app_name
+    menu_title: str = config.formatted_application_name  # "SaaSrx"  # config.formatted_application_name
     is_open: bool = False
 
     def toggle_menu(self):
@@ -84,8 +84,8 @@ class MenuState(State):
 
     def toggle_menu_title(self):
         self.menu_title = {
-            config.app_name: config.formated_app_name,
-            config.formated_app_name: config.app_name,
+            config.app_name: config.formatted_application_name,
+            config.formatted_application_name: config.app_name,
         }.get(self.menu_title, config.app_name)
 
     def redirect_home(self):

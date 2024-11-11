@@ -18,23 +18,9 @@
 
     resend_api_key = "re_"
 
+    _.python.venv.path = "{{ config_root }}/.venv"
+    _.python.venv.create = true
 
-    # [tasks.deploy]
-    #     #  options removed for now:
-    #     # RUN WITH `MISE_ENV=prod mise run deploy`
-    #     run = "uv run reflex deploy --no-interactive --deployment-key $deployment_key --region $deployment_region --env stripe_web_url=$stripe_web_url --env site_domain=$site_domain"
-    #     # shell = "bash -c"
-    #     # run = """uv run reflex deploy \
-    #     # --no-interactive \
-    #     # --deployment-key $deployment_key \
-    #     # --region $deployment_region \
-    #     # --env status_mode=$status_mode \
-    #     # --env stripe_key=$stripe_key --env stripe_web_url=$stripe_web_url \
-    #     # --env db_host=$db_host --env db_name=$db_name --env db_user=$db_user --env db_port=$db_port --env db_password=$db_password \
-    #     # --env email_domain=$email_domain --env email_from=$email_from \
-    #     # --env resend_api_key=$resend_api_key \
-    #     # --env site_domain=$site_domain
-    #     # """
 
 [tasks.dev]
     run = "uv run reflex run"
@@ -69,7 +55,6 @@
 [tasks."db:migrate"]
     run = "uv run reflex db makemigrations && uv run reflex db migrate"
 
-
 [tasks."test:email"]
     description = "Run the email tests"
     run = "uv run python -m pytest tests/test_email.py"
@@ -84,5 +69,6 @@
     run = "git archive -o releases/starterkit.zip HEAD"
 
 [tasks.docs] # deploy the website with mkdocs
+
     description = "Deploy the website with mkdocs"
     run = "cd docs && uv run mkdocs serve"

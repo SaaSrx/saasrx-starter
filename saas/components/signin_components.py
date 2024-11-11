@@ -3,19 +3,6 @@ import reflex as rx
 from saas.state import AuthState, MenuState
 
 
-def payment_success() -> rx.Component:
-    return rx.flex(
-        rx.box(
-            rx.icon("check-circle", class_name="h-12 w-12 text-green-500"),
-            rx.heading("Payment Successful!", class_name="mt-6 text-3xl font-extrabold text-indigo-800"),
-            rx.text(
-                "You can now access the app. Check your email for a link to sign in.",
-                class_name="mt-4 text-lg",
-            ),
-        )
-    )
-
-
 def redirect_cancel_buttons() -> rx.Component:
     return rx.flex(
         rx.hstack(

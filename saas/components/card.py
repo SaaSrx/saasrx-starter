@@ -1,7 +1,6 @@
 import reflex as rx
 
 from saas.app_config import config, image_assets
-from saas.rxext import console
 
 
 def homepage_card(

@@ -21,9 +21,13 @@ class Secrets(SecretConfig):
     supabase_key: str = _EMPTY
 
     # db info will change based on prod/test
+    db_url: str = _EMPTY
     db_host: str = _EMPTY
     db_user: str = _EMPTY
     db_password: str = _EMPTY
+
+    # if you want to seed the database using the scripts/dbseed.py
+    admin_email: str = _EMPTY
 
     # keys with default values will be optionally overwritten
     # key for checking where the keys are coming from
@@ -34,4 +38,3 @@ class Secrets(SecretConfig):
 
 # # get from env or pass in with kwargs, returns dataclass instance
 secrets = Secrets.setup()
-

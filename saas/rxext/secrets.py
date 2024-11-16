@@ -103,3 +103,6 @@ class SecretConfig:
 
     def __getitem__(self, key: str):
         return getattr(self, key)
+
+    def __setitem__(self, key: str, value):
+        return setattr(self, key, value)

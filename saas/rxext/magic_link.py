@@ -1,8 +1,8 @@
-import secrets
 from datetime import datetime, timedelta, timezone
+from secrets import token_urlsafe
 
 import reflex as rx
-from sqlmodel import delete, select
+from sqlmodel import delete
 
 from rxconfig import config
 from saas.models import MagicLink, MagicLinkConfig
@@ -72,7 +72,7 @@ class MagicLinkMixin:
             raise ValueError("Too many recent attempts. Please wait and try again.")
 
         # Generate a secure token
-        token = secrets.token_urlsafe()
+        token = token_urlsafe()
         expiration = datetime.now(timezone.utc) + expiration_delta
 
         # Store the token, email, and expiration in your database

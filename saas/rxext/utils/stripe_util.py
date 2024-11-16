@@ -1,10 +1,20 @@
 import stripe
 from fastapi import HTTPException, Request
 
-from saas.app_secret import secrets
 from saas.rxext import console
 
-webhook_secret: str = secrets["stripe_webhook_secret"]
+# from saas.app_secret import secrets
+# webhook_secret: str = secrets["stripe_webhook_secret"]
+# stripe_web_url: str = secrets["stripe_web_url"]
+
+
+class StripeUtil:
+    def __init__(self, webhook_secret: str):
+        self.webhook_secret = webhook_secret
+
+
+def get_stripe_payment_link(email: str = None):
+    return f"{stripe_web_url}?prefilled_email={email}"
 
 
 def verify_webhook_signature(payload: dict, headers: dict) -> dict:

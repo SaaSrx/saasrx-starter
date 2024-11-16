@@ -1,11 +1,8 @@
 from fastapi import Request
 
-from saas.app_secret import secrets
 from saas.rxext import console
 from saas.rxext.endpoints import Endpoint
 from saas.rxext.utils import stripe_util
-
-webhook_secret = secrets.stripe_webhook_secret
 
 
 class WebhookHandler(Endpoint):

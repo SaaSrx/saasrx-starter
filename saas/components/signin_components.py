@@ -28,8 +28,7 @@ def redirect_cancel_buttons() -> rx.Component:
     )
 
 
-def redirect_alert_dialog() -> rx.Component:
-    # return rx.container(
+def redirect_to_purchase_alert_dialog() -> rx.Component:
     return rx.box(
         rx.alert_dialog.root(
             rx.alert_dialog.content(
@@ -44,7 +43,7 @@ def redirect_alert_dialog() -> rx.Component:
                                 "Purchase Access",
                                 on_click=AuthState.redirect_to_external_purchase,
                                 size="4",
-                                class_name="w-[100%] justify-center",  # class_name="bg-indigo-600 text-white hover:bg-indigo-800",
+                                class_name="w-[100%] justify-center",
                             ),
                         ),
                     ),

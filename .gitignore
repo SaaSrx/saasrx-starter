@@ -29,3 +29,8 @@ alembic/
 alembic.ini
 
 .env
+
+.pdm-python
+pdm.lock
+saasrx_starter.egg-info/
+supabase/

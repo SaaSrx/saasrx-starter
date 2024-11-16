@@ -4,6 +4,7 @@
     deployment_key = "saas"
     deployment_region = "sjc"
 
+    test_user = "test@"
     db_host = "localhost"
     db_name = "postgres"
     db_user = "postgres"
@@ -12,14 +13,16 @@
 
     site_domain = "saasrx.dev"
 
+    admin_email = "admin@test.localhost"
     email_domain = "updates.{{ env.site_domain }}"
     email_from = "no-reply@{{ env.email_domain }}"
     email_to = "dev@localhost"
 
+
     resend_api_key = "re_"
 
-    _.python.venv.path = "{{ config_root }}/.venv"
-    _.python.venv.create = true
+    # _.python.venv.path = "{{ config_root }}/.venv"
+    # _.python.venv.create = true
 
 
 [tasks.dev]

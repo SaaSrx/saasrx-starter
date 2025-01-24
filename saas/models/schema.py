@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 from enum import StrEnum, auto
-from secrets import token_hex
+from hashlib import sha256
 from typing import Optional
 
 import reflex as rx
@@ -20,18 +20,19 @@ class AccessLevel(StrEnum):
 class User(rx.Model, table=True):
     """store customer information"""
 
-    # email: str  # = Field(primary_key=True, unique=True)
     email: str = Field(unique=True)
-    # access_level: int = Field(default=0)
     access_level: AccessLevel = Field(default=AccessLevel.NO_PAYMENT)
-    is_admin: bool = Field(default=False)
+
+    @property
+    def is_admin(self) -> bool:
+        return self.access_level == AccessLevel.ADMIN
 
 
 class MagicLink(rx.Model, table=True):
     """Store magic link authentication tokens"""
 
     token: str = Field(default_factory=generate_token_factory)
-    user_email: Optional[str] = Field(foreign_key="user.email")
+    user_email: str | None = Field(foreign_key="user.email")
     attempts_remaining: int = Field(default=TableConfig.MagicLinkConfig.MAX_ATTEMPTS)
     created: datetime = Field(
         sa_column=Column(
@@ -55,8 +56,11 @@ class MagicLink(rx.Model, table=True):
         """Returns SQLAlchemy expression for a valid link (not expired, less than max attempts)"""
         return (cls.expiration > func.now()) & (cls.attempts_remaining > 0)
 
-    def get_session_token(self) -> str:
-        return f"{self.token}:{token_hex()}"
+    @property
+    def session_token(self) -> str:
+        """Generates a session token by combining a hash of the user email with the magic link token."""
+        session_prefix = sha256((self.user_email or "").encode()).hexdigest()
+        return f"{session_prefix}:{self.token}"
 
 
 class Payment(rx.Model, table=True):

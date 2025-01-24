@@ -15,6 +15,14 @@ def get_started() -> rx.Component:
     return rx.box(rx.text("Get Started Section"), id="get-started")
 
 
+def spinner() -> rx.Component:
+    return rx.center(
+        rx.spinner(),  # rx.spinner(on_mount=LoginState.redir),
+        # width="100vw",
+        # height="100vh",
+    )
+
+
 def index() -> rx.Component:
     """The index page"""
     return rx.box(

@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta, timezone
-from secrets import hash_token, token_urlsafe
+from secrets import token_urlsafe
+
+from saas.rxext.utils.token_utils import hash_token
 
 
 class TableConfig:
@@ -22,7 +24,8 @@ def generate_token_factory():
     """
     its possible you may want to encode the token itself in which case you will need to verify the token
     """
+    token = token_urlsafe()
     if TableConfig.MagicLinkConfig._token_hashed:
-        return hash_token(token_urlsafe())
+        token = hash_token(token)
 
-    return token_urlsafe()  # or hash_token(token_urlsafe())
+    return token

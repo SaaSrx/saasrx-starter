@@ -48,6 +48,8 @@
     [STRIPE INFO] $stripe_pub_key
     '''
 
+[tasks."db:seed"]
+    run = "python scripts/dbseed.py"
 
 [tasks."db:reset"]
     description = "Reset the database by clean and then reinit"

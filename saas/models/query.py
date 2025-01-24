@@ -1,10 +1,10 @@
 import reflex as rx
 from sqlmodel import func
 
-from saas.models.schema import MagicLink, User
+from saas.models.schema import MagicLink, User, Payment
 
 
-def get_user_from_email(email: str) -> User | bool:
+def find_user_by_email(email: str) -> User | None:
     """
     Retrieve a user from the database based on their email address.
 
@@ -12,11 +12,11 @@ def get_user_from_email(email: str) -> User | bool:
         email (str): The email address of the user to retrieve.
 
     Returns:
-        User | bool: The User object if found, otherwise False.
+        User | None: The User object if found, otherwise None.
     """
     with rx.session() as session:
-        user = session.exec(User.select().where(User.email == email.lower())).first()
-        return user or False
+        user: User | None = session.exec(User.select().where(User.email == email.lower())).one_or_none()
+    return user
 
 
 def get_magic_link_token(user: User) -> str:
@@ -49,7 +49,7 @@ def get_magic_link_token(user: User) -> str:
         if magic_link:
             magic_link.attempts_remaining -= 1
         else:
-            magic_link = MagicLink(user_email=user.email)
+            magic_link = MagicLink(user_email=user.email, user=user)
         token = magic_link.token
 
         session.add(magic_link)
@@ -84,3 +84,22 @@ def check_magic_link(email: str, token: str, _return_bool: bool = False) -> Magi
             return magic_link is not None
 
         return magic_link
+
+
+def get_user_payments(user_email: str) -> list:
+    """
+    Retrieve all payments for a user from the database.
+
+    Args:
+        user_email (str): The email address of the user.
+
+    Returns:
+        list: A list of Payment objects for the user, ordered by creation date descending.
+    """
+    with rx.session() as session:
+        payments = session.exec(
+            Payment.select()
+            .where(Payment.user_email == user_email)
+            .order_by(Payment.created.desc())
+        ).all()
+        return payments

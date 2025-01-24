@@ -1,3 +1,5 @@
+from typing import Callable
+
 import reflex as rx
 
 from saas.state import MenuItem, MenuState
@@ -17,12 +19,16 @@ def navbar_icon(app_icon: str = "rocket") -> rx.Component:
     )
 
 
-def make_menu_items(items: list[MenuItem], link_func: callable, btn_func: callable):
+def make_menu_items(
+    items: list[MenuItem],
+    link_func: Callable[[str, str], rx.Component],
+    btn_func: Callable[[str, str], rx.Component],
+):
     def inner_func(item):
         return rx.match(
             item.typeof,
-            ("link", link_func(item.text, href=item.link)),
-            ("button", btn_func(item.text, href=item.link)),
+            ("link", link_func(item.text, item.link)),
+            ("button", btn_func(item.text, item.link)),
             rx.text("Unknown MenuType."),
         )
 
@@ -37,10 +43,10 @@ def navbar_desktop() -> rx.Component:
     link_style = "text-gray-600 hover:text-gray-900"
     btn_style = "text-white px-6 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-700 transition-colors"
 
-    def link_func(text, href):  # or `partial(rx.link, class_name=link_style)`
+    def link_func(text: str, href: str):
         return rx.link(text, href=href, class_name=link_style)
 
-    def btn_func(text, href):
+    def btn_func(text: str, href: str):
         return rx.link(rx.button(text, class_name=btn_style), href=href)
 
     return rx.box(

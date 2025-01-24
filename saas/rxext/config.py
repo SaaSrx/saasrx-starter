@@ -42,6 +42,8 @@ class Config(config.Config):
             it returns that list, otherwise it returns a list containing the first part of the module path.
     """
 
+    formatted_application_name: str
+
     @property
     def module(self) -> str:
         if hasattr(self, "module_path"):

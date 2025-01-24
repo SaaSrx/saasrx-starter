@@ -1,9 +1,11 @@
 import reflex as rx
 
-from saas.state import CheckoutState
-
 
 def user_email_form() -> rx.Component:
+    def _handle_data(data):
+        # handle with CheckoutState
+        pass
+
     return rx.box(
         rx.heading("email"),
         rx.form.root(
@@ -17,6 +19,6 @@ def user_email_form() -> rx.Component:
                 rx.button("purchase", type="submit"),
                 width="100%",
             ),
-            on_submit=CheckoutState.handle_submit,
+            on_submit=_handle_data,
         ),
     )

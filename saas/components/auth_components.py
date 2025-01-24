@@ -2,25 +2,17 @@ import reflex as rx
 
 from saas.app_config import config
 from saas.components import card
-from saas.state import AuthState, State
-
-
-def fake_user_button() -> rx.Component:
-    return rx.box(
-        rx.button("Fake User", class_name="btn btn-primary", on_click=State.gen_fake_user),
-        class_name="flex justify-center",
-    )
-
-
-def fake_gen_button() -> rx.Component:
-    return rx.box(
-        rx.button("Check", class_name="btn btn-primary", on_click=State.get_fake_auth),
-        class_name="flex justify-center",
-    )
+from saas.state import AuthState
 
 
 def verify_request_success() -> rx.Component:
-    return rx.box(f"Success, logged in for user: {AuthState.user_email}")
+    return rx.box(
+        rx.cond(
+            AuthState.user,
+            rx.text(f"Success, logged in for user: {AuthState.user.email}"),
+            rx.text("No user logged in"),
+        )
+    )
 
 
 def verify_request_emailed() -> rx.Component:

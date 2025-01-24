@@ -10,15 +10,14 @@
         "bcrypt>=4.2.0",
         "mkdocs-material>=9.5.43",
         "psycopg2>=2.9.10",
-        "reflex>=0.6.3",
         "resend>=2.4.0",
         "stripe>=11.2.0",
         "supabase>=2.9.1",
         "pytest==8.3.3",
         "resend==2.4.0",
         "stripe==11.2.0",
-        "reflex==0.6.4",
-    ]
+        "reflex==0.6.8",
+]
 
 
 [tool.setuptools.packages.find]

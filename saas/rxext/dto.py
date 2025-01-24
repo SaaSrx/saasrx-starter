@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from enum import StrEnum, auto
+from typing import Literal, TypeAlias
+
+MenuTypeLiteral: TypeAlias = Literal["link", "button"]
 
 
 class MenuType(StrEnum):
@@ -11,14 +14,14 @@ class MenuType(StrEnum):
 class MenuItem:
     text: str
     link: str
-    typeof: MenuType
+    typeof: MenuTypeLiteral | MenuType
 
 
 @dataclass
 class MenuLink(MenuItem):
-    typeof: MenuType = MenuType.LINK
+    typeof: MenuTypeLiteral = MenuType.LINK
 
 
 @dataclass
 class MenuButton(MenuItem):
-    typeof: MenuType = MenuType.BUTTON
+    typeof: MenuTypeLiteral = MenuType.BUTTON

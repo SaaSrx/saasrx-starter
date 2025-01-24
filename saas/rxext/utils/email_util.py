@@ -41,7 +41,7 @@ class EmailSender:
         # self.resend = resend
         # self.resend.api_key = api_key
 
-    def send_email(self, from_email: str, to_email: str, subject: str, html_content: str) -> dict:
+    def send_email(self, from_email: str, to_email: str, subject: str, html_content: str) -> dict[str, str]:
         raise NotImplementedError("send_email method not implemented")
 
 
@@ -67,7 +67,13 @@ class ResendAPIEmailSender(EmailSender):
     def __init__(self, api_key: str):
         self.api_key = api_key
 
-    def send_email(self, from_email: str, to_email: str, subject: str, html_content: str) -> dict:
+    def send_email(
+        self,
+        from_email: str,
+        to_email: str,
+        subject: str,
+        html_content: str,
+    ) -> dict[str, str]:
         headers = {
             "Content-Type": "application/json",
             "Authorization": f"Bearer {self.api_key}",
@@ -82,10 +88,12 @@ class ResendAPIEmailSender(EmailSender):
 
         response = requests.post("https://api.resend.com/emails", headers=headers, json=payload)
 
-        if response.ok:
-            return response.json()
-        else:
-            response.raise_for_status()  # Raises an HTTPError if the response was unsuccessful
+        if not response.ok:
+            # Raises an HTTPError if the response was unsuccessful
+            response.raise_for_status()
+
+        data = response.json()
+        return data
 
 
 # Example usage
@@ -108,27 +116,11 @@ def _make_supabase_client(supabase_url: str, supabase_key: str) -> Client:
     return create_client(supabase_url, supabase_key)
 
 
-def signin_with_otp(
-    email: str, supabase_client: Client = None, supabase_url: str = None, supabase_key: str = None
-):
-    if not supabase_client:
-        supabase_client: Client = _make_supabase_client(supabase_url, supabase_key)
-    should_create_user = True
-    redirect_to = "https://localhost/success"
-    response = supabase_client.auth.sign_in_with_otp(
-        {
-            "email": "example@email.com",
-            "options": {
-                # set this to false if you do not want the user to be automatically signed up
-                "should_create_user": should_create_user,
-                "email_redirect_to": "https://example.com/welcome",
-            },
-        }
-    )
-
-
 def verify_otp(
-    params: dict, supabase_client: Client = None, supabase_url: str = None, supabase_key: str = None
+    params: dict,
+    supabase_client: Client | None = None,
+    supabase_url: str | None = None,
+    supabase_key: str | None = None,
 ):
     if not supabase_client:
         supabase_client: Client = _make_supabase_client(supabase_url, supabase_key)

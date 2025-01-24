@@ -23,7 +23,10 @@ def verify_request_page() -> rx.Component:
 
 def already_logged_in() -> rx.Component:
     return rx.box(
-        rx.text("You are already logged in", class_name="mt-6 font-extrabold text-indigo-800"),
+        rx.text(
+            f"You are already logged in as: `{AuthState.session_token}`",
+            class_name="mt-6 font-extrabold text-indigo-800",
+        ),
         class_name="shadow-lg p-4 rounded",
     )
 
@@ -34,8 +37,7 @@ def signin_page() -> rx.Component:
         rx.box(
             rx.flex(
                 rx.box(
-                    admin_components.signin_show_admin_info(),
-                    already_logged_in(),
+                    rx.cond(AuthState.valid_session, already_logged_in()),
                     signin_components.signin_hero(),
                     signin_components.email_signin_form(),
                     signin_components.signup_text(),

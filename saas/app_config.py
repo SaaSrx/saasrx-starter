@@ -46,4 +46,4 @@ theme_config = {
 # config kwargs and possibly pop
 setup_log_level(config_kwargs)
 app_theme = rx.theme(**theme_config)
-config = Config(**config_kwargs)
+config: Config = Config(**config_kwargs)

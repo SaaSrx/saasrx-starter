@@ -19,20 +19,20 @@ def make_require_login(state: rx.State) -> Callable:
         ```
     """
 
-    def redirect() -> rx.Component:
-        return rx.box(
-            rx.spinner(on_mount=state.redirect_signin),
-            width="100vw",
-            height="100vh",
-        )
-
     def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
         @functools.wraps(page)
         def protected_page() -> rx.Component:
             return rx.box(
                 rx.cond(
                     state.is_hydrated,
-                    rx.cond(state.valid_session, page(), rx.box(rx.text("Not logged in"))),
+                    rx.cond(
+                        state.valid_session,
+                        page(),
+                        rx.box(
+                            # change to - rx.spinner(on_mount=state.redirect_signin),
+                            rx.text("Not logged in"),
+                        ),
+                    ),
                     rx.spinner(),
                 ),
             )

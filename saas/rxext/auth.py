@@ -4,6 +4,13 @@ from typing import Callable
 import reflex as rx
 
 
+def not_logged_in_base() -> rx.Component:
+    return rx.box(
+        rx.text("Not logged in"),
+        rx.link(rx.button("Login", class_name="text-white"), href="/"),
+    )
+
+
 def make_require_login(state: rx.State) -> Callable:
     """
     if using GoogleOAuthProvider, you can use the following:
@@ -19,7 +26,7 @@ def make_require_login(state: rx.State) -> Callable:
         ```
     """
 
-    def require_login(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
+    def require_wrapper(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
         @functools.wraps(page)
         def protected_page() -> rx.Component:
             return rx.box(
@@ -28,10 +35,7 @@ def make_require_login(state: rx.State) -> Callable:
                     rx.cond(
                         state.valid_session,
                         page(),
-                        rx.box(
-                            # change to - rx.spinner(on_mount=state.redirect_signin),
-                            rx.text("Not logged in"),
-                        ),
+                        not_logged_in_base(),
                     ),
                     rx.spinner(),
                 ),
@@ -39,4 +43,4 @@ def make_require_login(state: rx.State) -> Callable:
 
         return protected_page
 
-    return require_login
+    return require_wrapper

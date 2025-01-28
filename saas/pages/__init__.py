@@ -1,7 +1,7 @@
 from saas.pages.checkout import payment_success
 from saas.pages.dashboard import dashboard_page, download_page
 from saas.pages.docs import docs
-from saas.pages.index import index, spinner
+from saas.pages.index import index, spinning_status
 from saas.pages.user_pages import auth_verify_page, signin_page, verify_request_page
 
 __all__ = [
@@ -12,6 +12,6 @@ __all__ = [
     "index",
     "payment_success",
     "signin_page",
-    "spinner",
+    "spinning_status",
     "verify_request_page",
 ]

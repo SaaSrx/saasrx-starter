@@ -34,3 +34,4 @@ alembic.ini
 pdm.lock
 saasrx_starter.egg-info/
 supabase/
+scripts/justfile

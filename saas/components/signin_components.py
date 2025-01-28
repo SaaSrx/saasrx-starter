@@ -9,7 +9,7 @@ def redirect_cancel_buttons() -> rx.Component:
             rx.alert_dialog.cancel(
                 rx.button(
                     "Cancel",
-                    on_click=AuthState.redirect_alert,
+                    on_click=AuthState.redirect_alert_toggle,
                     variant="soft",
                     color_scheme="gray",
                 ),
@@ -94,7 +94,7 @@ def email_signin_form() -> rx.Component:
             rx.flex(
                 rx.form.field(
                     rx.flex(
-                        rx.form.label(""),  # "Email",
+                        # rx.form.label(""),  # if you want label above input,
                         rx.form.control(
                             rx.input(
                                 placeholder="you@email.com",
@@ -114,12 +114,12 @@ def email_signin_form() -> rx.Component:
                         align="stretch",
                     ),
                     name="email",
-                    server_invalid=AuthState.invalid_email,
+                    server_invalid=AuthState.signin_input_invalid,
                 ),
                 rx.form.submit(
                     rx.button(
                         "Send Magic Link Or Checkout",
-                        disabled=AuthState.input_invalid,
+                        disabled=AuthState.signin_input_invalid,
                         # class_name="bg-indigo-600 text-white hover:bg-indigo-800",
                     ),
                     as_child=True,

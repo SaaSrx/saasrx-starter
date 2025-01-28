@@ -107,6 +107,5 @@ def features() -> rx.Component:
             ),
             class_name="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
         ),
-        id="features",
-        class_name="py-24 bg-indigo-50/50",
+        id="features",  # class_name="py-24 bg-indigo-50/50",
     )

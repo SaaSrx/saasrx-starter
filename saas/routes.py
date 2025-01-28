@@ -24,7 +24,6 @@ class ROUTES:
     class AUTH:
         VERIFY = "/auth/verify"
 
-    # dashboard = "/dashboard"
     DASHBOARD = "/dashboard"
     DOWNLOAD = "/download"
 
@@ -32,3 +31,5 @@ class ROUTES:
         SUCCESS = "/payment/success"
 
     SIGNIN = "/signin"
+
+    STATUS = "/status"

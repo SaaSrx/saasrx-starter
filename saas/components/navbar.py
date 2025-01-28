@@ -39,7 +39,7 @@ def make_menu_items(
 # ---- Navbar Desktop Components
 
 
-def navbar_desktop() -> rx.Component:
+def navbar_desktop(items: list[MenuItem]) -> rx.Component:
     link_style = "text-gray-600 hover:text-gray-900"
     btn_style = "text-white px-6 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-700 transition-colors"
 
@@ -50,25 +50,7 @@ def navbar_desktop() -> rx.Component:
         return rx.link(rx.button(text, class_name=btn_style), href=href)
 
     return rx.box(
-        make_menu_items(items=MenuState.menu_items, link_func=link_func, btn_func=btn_func),
-        class_name="hidden md:flex items-center space-x-8",
-    )
-
-
-def navbar_desktop_() -> rx.Component:
-    link_style = "text-gray-600 hover:text-gray-900"
-    btn_style = "bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
-
-    def handler(item):
-        return rx.match(
-            item.typeof,
-            ("link", rx.link(item.text, href=item.link, class_name=link_style)),
-            ("button", rx.link(rx.button(item.text, class_name=btn_style), href=item.link)),
-            rx.text("Unknown MenuType."),
-        )
-
-    return rx.box(
-        rx.foreach(MenuState.menu_items, handler),
+        make_menu_items(items=items, link_func=link_func, btn_func=btn_func),
         class_name="hidden md:flex items-center space-x-8",
     )
 
@@ -76,7 +58,7 @@ def navbar_desktop_() -> rx.Component:
 # ---- Navbar Mobile Components
 
 
-def navbar_mobile() -> rx.Component:
+def navbar_mobile(items: list[MenuItem]) -> rx.Component:
     # link_style = "text-gray-600 hover:text-gray-900"
     link_style = ""
     # btn_style = "px-6 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-800 text-white transition-colors"
@@ -94,21 +76,21 @@ def navbar_mobile() -> rx.Component:
                 rx.icon("menu", size=30),
             ),
             rx.menu.content(
-                make_menu_items(items=MenuState.menu_items, link_func=link_func, btn_func=btn_func),
+                make_menu_items(items=items, link_func=link_func, btn_func=btn_func),
             ),
         ),
         class_name="flex",
     )
 
 
-def navbar_items() -> rx.Component:
+def navbar_items(items: list[MenuItem] = MenuState.menu_items) -> rx.Component:
     return rx.box(
         rx.box(
             navbar_icon(),
             # Desktop navigation links
-            rx.desktop_only(navbar_desktop()),
+            rx.desktop_only(navbar_desktop(items=items)),
             # Mobile menu button
-            rx.mobile_and_tablet(navbar_mobile()),
+            rx.mobile_and_tablet(navbar_mobile(items=items)),
             class_name="flex justify-between items-center h-16",
         ),
         class_name="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
@@ -117,11 +99,47 @@ def navbar_items() -> rx.Component:
 
 # Define the Navbar component
 def navbar():
-    return rx.el.nav(
+    return rx.box(
         # Main container with styling
         navbar_items(),
-        # Mobile navigation menu
         # Styling for the nav component
-        # class_name="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-100",
         class_name="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md border-b border-gray-100",
     )
+
+
+def page_with_navbar(*children) -> rx.Component:
+    """Wrap the given children components with a navbar and a styled container.
+
+    This function creates a layout that includes a fixed navbar at the top and a
+    content area below it. The content area has padding at the top to account for
+    the navbar and a light background color.
+
+    Args:
+        *children: Variable number of rx.Component objects to be rendered in the content area.
+
+    Returns:
+        rx.Component: A component representing the full page layout with navbar and content.
+    """
+    return rx.box(
+        navbar(),
+        rx.box(
+            *children,
+            class_name="pt-20 bg-indigo-50/50",
+        ),
+    )
+
+
+def for_page(func) -> Callable:
+    """Decorator that wraps a page component with the navbar and proper spacing.
+
+    Args:
+        func: The page component function to wrap
+
+    Returns:
+        The wrapped component with navbar and spacing
+    """
+
+    def wrapper(*args, **kwargs):
+        return page_with_navbar(func(*args, **kwargs))
+
+    return wrapper

@@ -3,35 +3,17 @@ import reflex as rx
 from saas.components import features, navbar
 
 
-def pricing() -> rx.Component:
-    return rx.box(rx.text("Pricing Section"), id="pricing")
+def spinning_status() -> rx.Component:
+    """
+    can further customize the spinner with mount like
+    rx.spinner(on_mount=LoginState.redir)
+    """
+    return rx.center(rx.spinner())
 
 
-def testimonials() -> rx.Component:
-    return rx.box(rx.text("Testimonials Section"), id="testimonials")
-
-
-def get_started() -> rx.Component:
-    return rx.box(rx.text("Get Started Section"), id="get-started")
-
-
-def spinner() -> rx.Component:
-    return rx.center(
-        rx.spinner(),  # rx.spinner(on_mount=LoginState.redir),
-        # width="100vw",
-        # height="100vh",
-    )
-
-
+# test the navbar.for_page wrapper to see how to use with require_login
+# @navbar.for_page
 def index() -> rx.Component:
-    """The index page"""
-    return rx.box(
-        navbar.navbar(),
+    return navbar.page_with_navbar(
         features.features(),
-        rx.flex(
-            # features.included_card(),
-            # features.included_card(),
-            spacing="5",
-            justify="center",
-        ),
     )

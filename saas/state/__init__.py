@@ -1,4 +1,12 @@
-from saas.state.state import AuthState, CheckoutState, DownloadState, MenuItem, MenuState, State
+from saas.state.state import (
+    AuthState,
+    CheckoutState,
+    DownloadState,
+    MenuItem,
+    MenuState,
+    State,
+    require_login,
+)
 
 __all__ = [
     "AuthState",
@@ -7,4 +15,5 @@ __all__ = [
     "MenuItem",
     "MenuState",
     "State",
+    "require_login",
 ]

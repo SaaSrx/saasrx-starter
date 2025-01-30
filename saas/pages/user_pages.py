@@ -1,6 +1,6 @@
 import reflex as rx
 
-from saas.components import admin_components, auth_components, signin_components
+from saas.components import auth_components, signin_components
 from saas.components.admin_components import cancel_redirect
 from saas.state import AuthState
 
@@ -21,13 +21,19 @@ def verify_request_page() -> rx.Component:
     )
 
 
-def already_logged_in() -> rx.Component:
-    return rx.box(
-        rx.text(
-            f"You are already logged in as: `{AuthState.session_token}`",
-            class_name="mt-6 font-extrabold text-indigo-800",
+def user_already_logged_in(auth_state: AuthState) -> rx.Component:
+    return rx.cond(
+        auth_state.is_hydrated,
+        rx.cond(
+            auth_state.valid_session,
+            rx.box(
+                rx.text(
+                    f"You are already logged in as!: `{AuthState.session_token}`",
+                    class_name="mt-6 font-extrabold text-indigo-800",
+                ),
+                class_name="shadow-lg p-4 rounded",
+            ),
         ),
-        class_name="shadow-lg p-4 rounded",
     )
 
 
@@ -37,7 +43,7 @@ def signin_page() -> rx.Component:
         rx.box(
             rx.flex(
                 rx.box(
-                    rx.cond(AuthState.valid_session, already_logged_in()),
+                    user_already_logged_in(auth_state=AuthState),
                     signin_components.signin_hero(),
                     signin_components.email_signin_form(),
                     signin_components.signup_text(),

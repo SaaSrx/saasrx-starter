@@ -3,22 +3,32 @@ from typing import Callable
 
 import reflex as rx
 
+from saas.routes import ROUTES
 
-def not_logged_in_base() -> rx.Component:
+
+def unauthorized_page_default() -> rx.Component:
     return rx.box(
-        rx.text("Not logged in"),
-        rx.link(rx.button("Login", class_name="text-white"), href="/"),
+        rx.vstack(
+            rx.link(
+                rx.button("Take me to login", class_name="text-white", size="4"),
+                href=ROUTES.SIGNIN,
+            ),
+        ),
+        class_name="flex items-center justify-center p-10",
     )
 
 
-def make_require_login(state: rx.State) -> Callable:
+def make_require_login(
+    state: rx.State,
+    unauthorized_page: Callable = unauthorized_page_default,
+) -> Callable:
     """
     if using GoogleOAuthProvider, you can use the following:
         ```
         GoogleOAuthProvider.create(
             rx.cond(
                 State.is_hydrated,
-                rx.cond(State.token_is_valid, page(), login()),
+                rx.cond(State.login_valid_check, page(), login()),
                 rx.spinner(),
             ),
             client_id=CLIENT_ID,
@@ -26,7 +36,7 @@ def make_require_login(state: rx.State) -> Callable:
         ```
     """
 
-    def require_wrapper(page: rx.app.ComponentCallable) -> rx.app.ComponentCallable:
+    def require_wrapper(page: Callable) -> Callable:
         @functools.wraps(page)
         def protected_page() -> rx.Component:
             return rx.box(
@@ -35,7 +45,7 @@ def make_require_login(state: rx.State) -> Callable:
                     rx.cond(
                         state.valid_session,
                         page(),
-                        not_logged_in_base(),
+                        unauthorized_page(),
                     ),
                     rx.spinner(),
                 ),

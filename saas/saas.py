@@ -16,7 +16,7 @@ app.add_page(component=pages.index, route=ROUTES.INDEX)
 app.add_page(component=pages.signin_page, route=ROUTES.SIGNIN)
 app.add_page(component=pages.download_page, route=ROUTES.DOWNLOAD)
 app.add_page(component=pages.dashboard_page, route=ROUTES.DASHBOARD)
-app.add_page(component=pages.spinner, route="spinr")
+app.add_page(component=pages.spinning_status, route=ROUTES.STATUS)
 
 # include the api router
 app.api.include_router(api_router, prefix=ROUTES.API)

@@ -1,6 +1,13 @@
 import reflex as rx
 
-from saas.components import features, navbar
+from saas.components import features, navbar, download
+from saas.state import require_login
+
+
+@navbar.for_page
+@require_login
+def download_page() -> rx.Component:
+    return download.download_release()
 
 
 def spinning_status() -> rx.Component:

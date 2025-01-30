@@ -8,17 +8,12 @@
     requires-python = ">=3.12"
     dependencies = [
         "bcrypt>=4.2.0",
-        "mkdocs-material>=9.5.43",
-        "psycopg2>=2.9.10",
-        "resend>=2.4.0",
-        "stripe>=11.2.0",
-        "supabase>=2.9.1",
-        "pytest==8.3.3",
+        "psycopg2-binary==2.9.10",
+        "reflex==0.6.8",
         "resend==2.4.0",
         "stripe==11.2.0",
-        "reflex==0.6.8",
-]
-
+        "supabase==2.9.1",
+    ]
 
 [tool.setuptools.packages.find]
     # since not using src layout because of reflex, need to specify the package for scripts to work
@@ -29,3 +24,6 @@
     line-length = 110
     [tool.ruff.lint.isort]
         known-third-party = ["supabase"]
+
+[dependency-groups]
+    dev = ["pytest>=8.3.4", "reflex-hosting-cli>=0.1.33"]

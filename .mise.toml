@@ -77,3 +77,6 @@
 
     description = "Deploy the website with mkdocs"
     run = "cd docs && uv run mkdocs serve"
+
+[tasks."deploy:gettoken"]
+    run = "jq -r '.access_token' ~/Library/Application\\ Support/reflex/hosting_v1.json"

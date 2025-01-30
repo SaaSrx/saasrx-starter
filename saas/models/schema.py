@@ -1,12 +1,12 @@
 from datetime import datetime, timezone
 from enum import StrEnum, auto
 from hashlib import sha256
-from typing import Optional
 
 import reflex as rx
 from sqlmodel import JSON, Column, DateTime, Field, func
 
 from saas.models.models_config import TableConfig, generate_token_factory
+from saas.rxext import console
 
 
 class AccessLevel(StrEnum):

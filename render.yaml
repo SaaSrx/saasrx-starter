@@ -1,7 +1,7 @@
 databases:
-  - name: postgres
+  - name: saasdb
     plan: free
-    databaseName: postgres
+    databaseName: saasdb
     user: postgres
 
 services:

@@ -1,12 +1,13 @@
 databases:
   - name: saasdb
     plan: free
-    # databaseName: saasdb 
     # user: postgres # postgres is an invalid name for render
 
 services:
   - type: web
     name: saasrx
+    plan: free
+    runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: reflex run --env prod
     envVars:

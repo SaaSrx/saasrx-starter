@@ -1,0 +1,33 @@
+databases:
+  - name: postgres
+    plan: free
+    databaseName: postgres
+    user: postgres
+
+services:
+  - type: web
+    name: saasrx
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: reflex run --env prod
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.1
+      - key: REFLEX_PORT
+        value: 8000
+      - key: REFLEX_HOST
+        value: 0.0.0.0
+      - key: REFLEX_ENV
+        value: prod
+      # You'll need to set these in your Render dashboard
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+    autoDeploy: true

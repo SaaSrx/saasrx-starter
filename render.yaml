@@ -8,7 +8,7 @@ services:
     name: saasrx
     plan: free
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pwd && echo '==> ls below' && ls && pip install -r requirements.txt
     startCommand: reflex run --env prod
     envVars:
       - key: PYTHON_VERSION

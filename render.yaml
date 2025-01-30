@@ -1,8 +1,8 @@
 databases:
   - name: saasdb
     plan: free
-    databaseName: saasdb
-    user: postgres
+    databaseName: saasdb 
+    # user: postgres # postgres is an invalid name for render
 
 services:
   - type: web

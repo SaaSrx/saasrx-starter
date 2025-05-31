@@ -1,3 +1,4 @@
+.states
 # for the following, waiting to commit this until can tell its necessary for deployment
 **/.DS_Store
 **/__ignore.py
@@ -35,3 +36,9 @@ pdm.lock
 saasrx_starter.egg-info/
 supabase/
 scripts/justfile
+.aider*
+
+docker/
+.python-version
+# ignore the old project until migrate to latest
+xold/

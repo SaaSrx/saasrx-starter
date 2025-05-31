@@ -1,29 +1,32 @@
 
 [env]
-    MISE_ENV = "test"
-    deployment_key = "saas"
+    MISE_ENV = "dev"
+    # activate the venv in the project root
+    _.python.venv.path   = "{{ config_root }}/.venv"
+    _.python.venv.create = true
+
+    deployment_key    = "saas"
     deployment_region = "sjc"
 
-    test_user = "test@"
-    db_host = "localhost"
-    db_name = "postgres"
-    db_user = "postgres"
-    db_port = "5432"
+    test_user   = "test@"
+    db_host     = "localhost"
+    db_name     = "postgres"
+    db_user     = "postgres"
+    db_port     = "5432"
     db_password = "password"
 
     site_domain = "saasrx.dev"
 
-    admin_email = "admin@test.localhost"
+    admin_email  = "admin@test.localhost"
     email_domain = "updates.{{ env.site_domain }}"
-    email_from = "no-reply@{{ env.email_domain }}"
-    email_to = "dev@localhost"
-
+    email_from   = "no-reply@{{ env.email_domain }}"
+    email_to     = "dev@localhost"
 
     resend_api_key = "re_"
 
-    # _.python.venv.path = "{{ config_root }}/.venv"
-    # _.python.venv.create = true
 
+[tasks.export]
+    run = "uv run reflex export --frontend-only"
 
 [tasks.dev]
     run = "uv run reflex run"
@@ -33,15 +36,14 @@
 
 [tasks."db:clean"]
     description = "Clean by trashing alembic & db files"
-    run = "trash reflex.db alembic/ alembic.ini"
+    run         = "trash reflex.db alembic/ alembic.ini"
 
 [tasks."db:init"]
     description = "Initialize the database"
-    run = "uv run reflex db init"
+    run         = "uv run reflex db init"
 
 [tasks."db:info"]
-    # use this to verify the db info
-    description = "Prints the db info"
+    description = "use this to verify the db info"
     run = '''
     echo USING: $status_mode \\n\
     [DB INFO] $db_host $db_user $db_name \\n\
@@ -53,30 +55,36 @@
 
 [tasks."db:reset"]
     description = "Reset the database by clean and then reinit"
-    depends = ["db:clean"]
+    depends     = ["db:clean"]
     # need to run like this so that it runs sequentially, otherwise must pass --jobs or MISE_JOBS
-    run = "mise run db:init"
+    run = "uv run reflex db init"
 
 [tasks."db:migrate"]
     run = "uv run reflex db makemigrations && uv run reflex db migrate"
 
 [tasks."test:email"]
     description = "Run the email tests"
-    run = "uv run python -m pytest tests/test_email.py"
+    run         = "uv run python -m pytest tests/test_email.py"
 
 [tasks."test:all"]
     description = "Run all the tests"
-    run = "uv run python -m pytest tests/"
+    run         = "uv run python -m pytest tests/"
 
 [tasks.release]
     #  allow users to download the zip until github integration is setup
     description = "Create a release zip to download the code"
-    run = "git archive -o releases/starterkit.zip HEAD"
+    run         = "git archive -o releases/starterkit.zip HEAD"
 
-[tasks.docs] # deploy the website with mkdocs
-
+[tasks.docs]
     description = "Deploy the website with mkdocs"
-    run = "cd docs && uv run mkdocs serve"
+    run         = "cd docs && uv run mkdocs serve"
 
 [tasks."deploy:gettoken"]
-    run = "jq -r '.access_token' ~/Library/Application\\ Support/reflex/hosting_v1.json"
+    description = "Get the deployment token from reflex, use with `mise deploy:token | pbcopy`"
+    run         = "jq -r '.access_token' ~/Library/Application\\ Support/reflex/hosting_v1.json"
+
+[tasks."dbuild:mise"]
+    run = "docker build -t saasrx/mise -f mise.dockerfile ."
+
+[tasks."dbuild:app"]
+    run = "docker build -t saasrx/app -f dockerfile ."

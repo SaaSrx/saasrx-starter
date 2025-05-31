@@ -2,22 +2,21 @@
     name = "saasrx"
     version = "0.0.1"
     description = "saasrx starter kit"
-    readme = "README.md"
+    readme = "readme.md"
     authors = [{ name = "graham", email = "graham.annett@gmail.com" }]
-    # cant use 3.13 if deploying on reflex
-    requires-python = ">=3.12"
+    requires-python = ">=3.13"
     dependencies = [
         "bcrypt>=4.2.0",
         "psycopg2-binary==2.9.10",
-        "reflex==0.6.8",
-        "resend==2.4.0",
-        "stripe==11.2.0",
-        "supabase==2.9.1",
+        "reflex==0.7.13",
+        "resend==2.10.0",
+        "stripe==12.2.0",
+        "supabase==2.15.2",
     ]
 
 [tool.setuptools.packages.find]
     # since not using src layout because of reflex, need to specify the package for scripts to work
-    where = ["."]
+    where   = ["."]
     include = ["saas"]
 
 [tool.ruff]

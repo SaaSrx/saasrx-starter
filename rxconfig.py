@@ -1,4 +1,6 @@
-from saas.app_config import config
-##  ALTERNATIVELY NEED THE FOLLOWING
-# from saas import rxext.Config as Config, saas_config.config_kwargs as cwargs
-# config = Config(**cwargs)
+import reflex as rx
+
+config = rx.Config(
+    app_name="saasrx",
+    plugins=[rx.plugins.TailwindV3Plugin()],
+)

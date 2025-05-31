@@ -34,3 +34,7 @@ The admin dashboard that is built into reflex is available on the backend at '/a
 ## Debugging
 
 previously you could use the breakpoint() function to debug the code. now, this requires using `REFLEX_USE_GRANIAN=0`
+
+# deployment
+
+`pip install -e ./packages/rxext` fails by referring to the git url, better just to stick with uv for everything as seems to work with reflex at this point

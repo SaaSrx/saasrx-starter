@@ -1,6 +1,6 @@
 
 [env]
-    MISE_ENV = "dev"
+    MISE_ENV = "dev" # the mise file to use
     # activate the venv in the project root
     _.python.venv.path   = "{{ config_root }}/.venv"
     _.python.venv.create = true

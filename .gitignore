@@ -39,6 +39,10 @@ scripts/justfile
 .aider*
 
 docker/
+# hate these files but probably should add back later
 .python-version
-# ignore the old project until migrate to latest
+py.typed
+# ignore the old project and PLAN until migrate to latest
+PLAN.md
 xold/
+**/*.egg-info/

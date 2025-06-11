@@ -8,11 +8,12 @@
     dependencies = [
         "bcrypt>=4.2.0",
         "psycopg2-binary==2.9.10",
-        "reflex==0.7.13",
+        "reflex==0.7.14",
         "resend==2.10.0",
         "stripe==12.2.0",
         "supabase==2.15.2",
         "rxext",
+        "starlette-admin==0.15.1",
     ]
 
 
@@ -27,6 +28,8 @@
 
 
 [tool.ruff]
+    line-length = 120
+
     [tool.ruff.lint.isort]
         known-first-party = ["rxext"]
         known-third-party = ["supabase"]

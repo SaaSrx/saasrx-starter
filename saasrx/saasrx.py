@@ -2,29 +2,30 @@
 
 import reflex as rx
 
-from rxconfig import config
 from rxext import rxext_info
 
+# from saasrx.api import api as api_app
+from fastapi import FastAPI
 
-class State(rx.State):
-    """The app state."""
-
-    ...
+from saasrx.state import State
+from saasrx.pages import index
 
 
 class User(rx.Model, table=True):
     username: str
     email: str
 
-
-def index() -> rx.Component:
-    # Welcome Page (Index)
-    return rx.container(
-        rx.text("refactor/migrate to reflex 0.7.13"),
-        rx.divider(),
-        rx.heading(rxext_info),
-    )
+    def test_func(self, other_val: str):
+        return f"Hello {other_val}"
 
 
-app = rx.App(admin_dash=rx.AdminDash(models=[User]))
+api_app = FastAPI(
+    title="saasrx api",
+)
+api_app.add_api_route("/health", api_health)
+
+app = rx.App(
+    api_transformer=api_app,
+    admin_dash=rx.AdminDash(models=[User]),
+)
 app.add_page(index)

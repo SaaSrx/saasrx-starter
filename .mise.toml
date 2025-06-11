@@ -1,4 +1,3 @@
-
 [env]
     MISE_ENV = "dev" # the mise file to use
     # activate the venv in the project root
@@ -23,6 +22,8 @@
     email_to     = "dev@localhost"
 
     resend_api_key = "re_"
+
+    PROJECT_ROOT = "/Users/graham/code/saasrx/saasrx-starter"  # switch to "{{ config_root }}" if possible
 
 
 [tasks.export]
@@ -88,3 +89,12 @@
 
 [tasks."dbuild:app"]
     run = "docker build -t saasrx/app -f dockerfile ."
+
+[tasks."worktree:setup"]
+    description = "Setup a new git worktree by copying missing files/dirs from main project"
+    run = '''
+    [ ! -f .mise.dev.toml ] && cp $PROJECT_ROOT/.mise.dev.toml .
+    [ ! -f .mise.prod.toml ] && cp $PROJECT_ROOT/.mise.prod.toml .
+    [ ! -d xold ] && cp -r $PROJECT_ROOT/xold .
+    [ ! -f PLAN.md ] && cp $PROJECT_ROOT/PLAN.md .
+    '''

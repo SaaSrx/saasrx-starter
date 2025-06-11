@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import StrEnum, auto
-from typing import Literal, TypeAlias
+from typing import TypeAlias, Literal
 
 MenuTypeLiteral: TypeAlias = Literal["link", "button"]
 

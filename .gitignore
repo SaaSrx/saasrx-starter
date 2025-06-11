@@ -46,3 +46,4 @@ py.typed
 PLAN.md
 xold/
 **/*.egg-info/
+.gitignore.bak

@@ -98,3 +98,17 @@
     [ ! -d xold ] && cp -r $PROJECT_ROOT/xold .
     [ ! -f PLAN.md ] && cp $PROJECT_ROOT/PLAN.md .
     '''
+
+
+[tasks."claudecode:allowignored"]
+    run = '''
+    sed -i.bak '47s/^xold\//# xold\//' .gitignore
+    echo "Uncommented xold/ in .gitignore - you now have access to these files."
+    '''
+
+[tasks."claudecode:restoreignored"]
+    run = '''
+    sed -i.bak '47s/^# xold\//xold\//' .gitignore
+    echo "Restored xold/ in .gitignore - these files will be ignored again."
+    '''
+

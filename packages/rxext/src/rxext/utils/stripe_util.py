@@ -15,14 +15,26 @@ def get_stripe_payment_link(email: str | None = None):
     return f"{stripe_web_url}?prefilled_email={email}"
 
 
-def verify_webhook_signature(payload: dict, headers: dict) -> dict:
+def verify_webhook_signature(payload: bytes | dict, headers: dict, webhook_secret: str | None = None) -> dict:
     """Verify the Stripe webhook signature and return the parsed event."""
+    if webhook_secret is None:
+        # TODO: Get from config or environment
+        webhook_secret = "your_webhook_secret_here"
+    
     try:
         console.log(f"verify for \n{payload=}\nand\n{headers=}")
+        
+        # Handle both bytes and dict payloads
+        if isinstance(payload, dict):
+            import json
+            payload_bytes = json.dumps(payload).encode('utf-8')
+        else:
+            payload_bytes = payload
+            
         event = stripe.Webhook.construct_event(
-            payload=payload,
-            sig_header=headers["stripe-signature"],
-            secret="webhook_secret",  # placeholder, inject real secret later
+            payload=payload_bytes,
+            sig_header=headers.get("stripe-signature", ""),
+            secret=webhook_secret,
         )
         return event
     except stripe.error.SignatureVerificationError as e:

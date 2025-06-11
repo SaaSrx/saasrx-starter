@@ -4,9 +4,7 @@ import reflex as rx
 
 from rxext import rxext_info
 
-# from saasrx.api import api as api_app
-from fastapi import FastAPI
-
+from saasrx.api.bootstrap import api_app
 from saasrx.state import State
 from saasrx.pages import index
 
@@ -17,12 +15,6 @@ class User(rx.Model, table=True):
 
     def test_func(self, other_val: str):
         return f"Hello {other_val}"
-
-
-api_app = FastAPI(
-    title="saasrx api",
-)
-api_app.add_api_route("/health", api_health)
 
 app = rx.App(
     api_transformer=api_app,

@@ -22,7 +22,6 @@ class User(rx.Model, table=True):
 api_app = FastAPI(
     title="saasrx api",
 )
-api_app.add_api_route("/health", api_health)
 
 app = rx.App(
     api_transformer=api_app,

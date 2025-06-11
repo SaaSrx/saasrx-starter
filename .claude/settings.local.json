@@ -4,8 +4,15 @@
       "Bash(reflex run:*)",
       "Bash(cat:*)",
       "Bash(ls:*)",
-      "Bash(find:*)"
-    ]
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(git push:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
   },
   "enableAllProjectMcpServers": true
 }
